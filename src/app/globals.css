@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  /* Base — dark mode tingido warm */
+  --background: #0F0906;
+  --foreground: #FBF6F1;
+  --foreground-rgb: 251, 246, 241;
+
+  /* Tokens Kangaroo */
+  --c-canvas: #0F0906;
+  --c-surface: #1A120B;
+  --c-surface-2: #241813;
+  --c-text-primary: #FBF6F1;
+  --c-text-secondary: #C7BAAD;
+  --c-text-mute: #8A7D70;
+  --c-line: rgba(255, 90, 42, 0.14);
+  --c-line-strong: rgba(255, 90, 42, 0.32);
+
+  /* Brand accent primária */
+  --c-orange: #FF5A2A;
+  --c-orange-hover: #FF7048;
+
+  /* Accents secundários (rotativos por produto) */
+  --c-yellow: #F5A623;
+  --c-blue: #4FB4F5;
+  --c-purple: #9A6BE0;
+
+  /* Marketing tokens (alinhado com assets-devweb) */
+  --marketing-page-bg: #0F0906;
+  --marketing-primary-bg: #1A120B;
+  --marketing-primary-bg-hover: #241813;
+  --marketing-primary-text: #FBF6F1;
+
+  --marketing-accent: #FF5A2A;
+  --marketing-border: rgba(255, 90, 42, 0.14);
+
+  --marketing-heading: #FBF6F1;
+  --marketing-copy: #FBF6F1;
+  --marketing-copy-soft: #C7BAAD;
+  --marketing-eyebrow: #8A7D70;
+
+  --marketing-card-cream: rgba(255, 255, 255, 0.03);
+
+  --marketing-footer-bg: #0A0604;
+  --marketing-footer-link: #C7BAAD;
+  --marketing-footer-muted: #8A7D70;
+
+  /* Easing */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in: cubic-bezier(.7, 0, .84, 0);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+
+  /* Sparkles */
+  --gradient-color: #FF5A2A;
+  --sparkles-color: #FF5A2A;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+
+  --color-canvas: var(--c-canvas);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-orange: var(--c-orange);
+  --color-yellow: var(--c-yellow);
+  --color-blue: var(--c-blue);
+  --color-purple: var(--c-purple);
+  --color-mute: var(--c-text-mute);
+}
+
+html { scroll-behavior: smooth; }
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
+}
+
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+p, li { text-wrap: pretty; }
+
+::selection { background: rgba(255, 90, 42, 0.32); color: #FBF6F1; }
+
+/* Textura de bolinhas global — fixa, cobre página toda */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-color: transparent;
+  background-image: radial-gradient(white 1px, transparent 0);
+  background-size: 5px 5px;
+}
+
+/* Halftone pattern utilitário */
+.halftone {
+  background-image: radial-gradient(rgba(255, 90, 42, 0.18) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+/* Reduced motion — acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
