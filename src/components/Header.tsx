@@ -2,6 +2,7 @@
 
 import {
   Menu,
+  X,
   Camera,
   Disc3,
   Disc,
@@ -9,7 +10,7 @@ import {
   Gift,
   Mic,
 } from "lucide-react";
-import type { JSX } from "react";
+import { useState, type JSX } from "react";
 
 import {
   Accordion,
@@ -182,7 +183,7 @@ function renderMenuItem(item: MenuItem) {
   );
 }
 
-function renderMobileMenuItem(item: MenuItem) {
+function renderMobileMenuItem(item: MenuItem, onNavigate: () => void) {
   if (item.items) {
     return (
       <AccordionItem
@@ -202,6 +203,7 @@ function renderMobileMenuItem(item: MenuItem) {
             {item.items.map((subItem) => (
               <a
                 key={subItem.title}
+                onClick={onNavigate}
                 className="flex select-none items-center gap-3 rounded-md px-2.5 py-2.5 leading-none outline-none transition-colors hover:bg-white/5 no-underline"
                 href={subItem.url}
               >
@@ -227,6 +229,7 @@ function renderMobileMenuItem(item: MenuItem) {
     <a
       key={item.title}
       href={item.url}
+      onClick={onNavigate}
       className="no-underline block px-2.5 py-3.5 text-base"
       style={{
         color: "var(--c-text-primary)",
@@ -241,6 +244,8 @@ function renderMobileMenuItem(item: MenuItem) {
 }
 
 export function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <header
       className="fixed inset-x-0 top-0 z-[100]"
@@ -272,11 +277,13 @@ export function Header() {
         <div className="block lg:hidden">
           <div className="flex items-center justify-between h-[60px]">
             <Logo />
-            <Sheet>
+            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
                 <button
-                  aria-label="Abrir menu"
-                  className="inline-flex items-center justify-center rounded-md transition-colors hover:bg-white/5"
+                  aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
+                  aria-expanded={mobileOpen}
+                  onClick={() => setMobileOpen((v) => !v)}
+                  className="relative z-[120] inline-flex items-center justify-center rounded-md transition-colors hover:bg-white/5"
                   style={{
                     width: 40,
                     height: 40,
@@ -284,10 +291,10 @@ export function Header() {
                     color: "var(--c-text-primary)",
                   }}
                 >
-                  <Menu className="size-4" />
+                  {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
                 </button>
               </SheetTrigger>
-              <SheetContent className="overflow-y-auto flex flex-col gap-0 p-0 w-[86%] max-w-[360px]">
+              <SheetContent className="z-[110] overflow-y-auto flex flex-col gap-0 p-0 w-[86%] max-w-[360px]">
                 <SheetHeader
                   className="px-5 py-4"
                   style={{ borderBottom: "1px solid var(--c-line)" }}
@@ -304,7 +311,7 @@ export function Header() {
                     variant="ghost"
                     className="w-full max-w-none"
                   >
-                    {menu.map((item) => renderMobileMenuItem(item))}
+                    {menu.map((item) => renderMobileMenuItem(item, () => setMobileOpen(false)))}
                   </Accordion>
                 </div>
 
