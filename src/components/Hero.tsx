@@ -144,15 +144,15 @@ export function Hero() {
         {/* ESQUERDA — topo (visível em todas as telas) */}
         <FloatingElement
           depth={1}
-          className="top-[8%] left-[2%] sm:top-[10%] sm:left-[4%] md:top-[12%] md:left-[7%]"
+          className="top-[7%] left-[2%] sm:top-[10%] sm:left-[4%] md:top-[12%] md:left-[7%]"
         >
           <PhotoCard
             src={exampleImages[1].url}
             alt={exampleImages[1].title}
-            className="w-24 h-20 sm:w-36 sm:h-28 md:w-60 md:h-48 lg:w-72 lg:h-56"
+            className="w-32 h-28 sm:w-36 sm:h-28 md:w-60 md:h-48 lg:w-72 lg:h-56"
             rotation="rotate(-6deg)"
             delay={0.5}
-            sizes="(min-width: 1024px) 288px, (min-width: 768px) 240px, (min-width: 640px) 144px, 96px"
+            sizes="(min-width: 1024px) 288px, (min-width: 768px) 240px, (min-width: 640px) 144px, 128px"
             priority
           />
         </FloatingElement>
@@ -160,15 +160,15 @@ export function Hero() {
         {/* DIREITA — topo (visível em todas as telas) */}
         <FloatingElement
           depth={2}
-          className="top-[8%] right-[2%] sm:top-[10%] sm:right-[4%] md:top-[12%] md:right-[7%]"
+          className="top-[7%] right-[2%] sm:top-[10%] sm:right-[4%] md:top-[12%] md:right-[7%]"
         >
           <PhotoCard
             src={exampleImages[3].url}
             alt={exampleImages[3].title}
-            className="w-24 h-20 sm:w-36 sm:h-28 md:w-60 md:h-52 lg:w-72 lg:h-60"
+            className="w-32 h-28 sm:w-36 sm:h-28 md:w-60 md:h-52 lg:w-72 lg:h-60"
             rotation="rotate(6deg)"
             delay={0.9}
-            sizes="(min-width: 1024px) 288px, (min-width: 768px) 240px, (min-width: 640px) 144px, 96px"
+            sizes="(min-width: 1024px) 288px, (min-width: 768px) 240px, (min-width: 640px) 144px, 128px"
             priority
           />
         </FloatingElement>
@@ -176,30 +176,30 @@ export function Hero() {
         {/* ESQUERDA — base */}
         <FloatingElement
           depth={3}
-          className="top-[72%] left-[2%] sm:top-[60%] sm:left-[3%] md:top-[54%] md:left-[5%]"
+          className="top-[70%] left-[2%] sm:top-[60%] sm:left-[3%] md:top-[54%] md:left-[5%]"
         >
           <PhotoCard
             src={exampleImages[2].url}
             alt={exampleImages[2].title}
-            className="w-24 h-24 sm:w-44 sm:h-44 md:w-64 md:h-64 lg:w-80 lg:h-80"
+            className="w-32 h-32 sm:w-44 sm:h-44 md:w-64 md:h-64 lg:w-80 lg:h-80"
             rotation="rotate(-3deg)"
             delay={0.7}
-            sizes="(min-width: 1024px) 320px, (min-width: 768px) 256px, (min-width: 640px) 176px, 96px"
+            sizes="(min-width: 1024px) 320px, (min-width: 768px) 256px, (min-width: 640px) 176px, 128px"
           />
         </FloatingElement>
 
         {/* DIREITA — base */}
         <FloatingElement
           depth={1}
-          className="top-[72%] right-[2%] sm:top-[60%] sm:right-[3%] md:top-[54%] md:right-[5%]"
+          className="top-[70%] right-[2%] sm:top-[60%] sm:right-[3%] md:top-[54%] md:right-[5%]"
         >
           <PhotoCard
             src={exampleImages[4].url}
             alt={exampleImages[4].title}
-            className="w-24 h-24 sm:w-44 sm:h-44 md:w-64 md:h-64 lg:w-80 lg:h-80"
+            className="w-32 h-32 sm:w-44 sm:h-44 md:w-64 md:h-64 lg:w-80 lg:h-80"
             rotation="rotate(3deg)"
             delay={1.1}
-            sizes="(min-width: 1024px) 320px, (min-width: 768px) 256px, (min-width: 640px) 176px, 96px"
+            sizes="(min-width: 1024px) 320px, (min-width: 768px) 256px, (min-width: 640px) 176px, 128px"
           />
         </FloatingElement>
 
@@ -264,7 +264,7 @@ export function Hero() {
         </motion.a>
 
         <motion.h1
-          className="text-[28px] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-center w-full justify-center items-center flex-col flex whitespace-pre leading-[0.98]"
+          className="text-[44px] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-center w-full justify-center items-center flex-col flex whitespace-pre leading-[0.95]"
           style={{
             fontFamily: "var(--font-display)",
             fontWeight: 700,
@@ -318,28 +318,69 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          className="flex flex-col sm:flex-row sm:flex-wrap justify-center items-center gap-3 mt-7 sm:mt-10 md:mt-12 z-20 w-full sm:w-auto px-2 sm:px-0"
+          className="flex flex-col sm:flex-row sm:flex-wrap justify-center items-center gap-3 mt-7 sm:mt-10 md:mt-12 z-20"
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.4, ease: "easeOut", delay: 0.7 }}
         >
-          <div className="w-full sm:w-auto order-2 sm:order-1 [&_a]:w-full sm:[&_a]:w-auto [&_a]:justify-center">
-            <ButtonSecondary href="#equipamentos" size="lg">
+          <div className="order-2 sm:order-1">
+            <ButtonSecondary href="#equipamentos" size="default">
               Ver equipamentos
             </ButtonSecondary>
           </div>
-          <div className="w-full sm:w-auto order-1 sm:order-2 [&_a]:w-full sm:[&_a]:w-auto">
+          <div className="order-1 sm:order-2">
             <ShinyButton
               href={WHATSAPP}
               target="_blank"
               rel="noopener noreferrer"
-              size="lg"
+              size="default"
             >
               Solicitar orçamento
             </ShinyButton>
           </div>
         </motion.div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.a
+        href="#equipamentos"
+        aria-label="Rolar para próxima seção"
+        className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 no-underline pointer-events-auto group"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.2, duration: 0.6 }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-geist-mono)",
+            fontSize: 9.5,
+            textTransform: "uppercase",
+            letterSpacing: "0.22em",
+            color: "var(--c-text-mute)",
+          }}
+        >
+          arraste
+        </span>
+        <motion.div
+          className="relative flex items-start justify-center rounded-full"
+          style={{
+            width: 22,
+            height: 34,
+            border: "1px solid var(--c-line-strong)",
+            background: "rgba(15, 9, 6, 0.45)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+          }}
+        >
+          <motion.span
+            aria-hidden="true"
+            className="block rounded-full"
+            style={{ width: 3, height: 6, background: "var(--c-orange)", marginTop: 6 }}
+            animate={{ y: [0, 12, 0], opacity: [1, 0.2, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      </motion.a>
     </section>
   );
 }
