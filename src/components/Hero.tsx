@@ -1,224 +1,38 @@
 "use client";
 
 import { LayoutGroup, motion } from "framer-motion";
-import Image from "next/image";
 import { TextRotate } from "@/components/ui/text-rotate";
-import { Grainient } from "@/components/ui/Grainient";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { ButtonSecondary } from "@/components/ui/button-secondary";
-import Floating, {
-  FloatingElement,
-} from "@/components/ui/parallax-floating";
-
-const WHATSAPP =
-  "https://wa.me/5551996752150?text=Olá%20Kangaroo,%20quero%20um%20orçamento%20para%20o%20meu%20evento.";
-
-const exampleImages = [
-  {
-    url: "/images/hero/hero-record.webp",
-    title: "Stand Record Guaíba",
-  },
-  {
-    url: "/images/post4-hm-03.jpg",
-    title: "Cabine H&M Iguatemi Porto Alegre",
-  },
-  {
-    url: "/images/hero/hero-cabine-premios.webp",
-    title: "Cabine de prêmios Kangaroo em evento",
-  },
-  {
-    url: "/images/hero/hero-docile.webp",
-    title: "Plataforma 360° no stand da Docile",
-  },
-  {
-    url: "/images/hero/hero-equipe.webp",
-    title: "Equipe Kangaroo em ativação",
-  },
-];
-
-/* Mac window mockup wrapper */
-function PhotoCard({
-  src,
-  alt,
-  className,
-  rotation,
-  delay,
-  sizes,
-  priority,
-  opacity,
-}: {
-  src: string;
-  alt: string;
-  className: string;
-  rotation: string;
-  delay: number;
-  sizes: string;
-  priority?: boolean;
-  opacity?: number;
-}) {
-  return (
-    <motion.div
-      className={`${className} relative overflow-hidden rounded-xl shadow-2xl cursor-pointer hover:scale-[1.03] transition-transform duration-200 flex flex-col`}
-      style={{
-        transform: rotation,
-        background: "var(--c-surface)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-      }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: opacity ?? 1 }}
-      transition={{ delay }}
-    >
-      {/* Mac titlebar */}
-      <div
-        className="flex items-center gap-1.5 px-2.5 shrink-0"
-        style={{
-          height: 22,
-          background: "rgba(20, 14, 10, 0.95)",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-        }}
-      >
-        <span
-          className="rounded-full"
-          style={{ width: 8, height: 8, background: "#ED6A5E" }}
-        />
-        <span
-          className="rounded-full"
-          style={{ width: 8, height: 8, background: "#F5BF4F" }}
-        />
-        <span
-          className="rounded-full"
-          style={{ width: 8, height: 8, background: "#62C554" }}
-        />
-      </div>
-
-      {/* Image area */}
-      <div className="relative flex-1 overflow-hidden">
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={sizes}
-          className="object-cover"
-          priority={priority}
-        />
-      </div>
-    </motion.div>
-  );
-}
+import { HeroGallery } from "@/components/HeroGallery";
+import { whatsappUrl } from "@/lib/site";
 
 export function Hero() {
   return (
     <section
-      className="w-full h-screen overflow-hidden flex flex-col items-center justify-center relative"
+      aria-label="Kangaroo — tecnologia interativa para eventos"
+      className="w-full h-[122vh] overflow-hidden flex flex-col items-center justify-start pt-[8vh] relative"
       style={{ background: "var(--c-canvas)" }}
     >
-      {/* Grainient WebGL background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <Grainient
-          color1="#090909"
-          color2="#5f3c25"
-          color3="#000000"
-          timeSpeed={0.25}
-          colorBalance={0.0}
-          warpStrength={1.0}
-          warpFrequency={5.0}
-          warpSpeed={2.0}
-          warpAmplitude={50.0}
-          blendAngle={0.0}
-          blendSoftness={0.05}
-          rotationAmount={500.0}
-          noiseScale={2.0}
-          grainAmount={0.1}
-          grainScale={2.0}
-          grainAnimated={false}
-          contrast={1.5}
-          gamma={1.0}
-          saturation={1.0}
-          centerX={0.0}
-          centerY={0.0}
-          zoom={0.9}
-        />
-      </div>
+      {/* Base escura */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{ background: "#0F0906" }}
+      />
 
-      <Floating sensitivity={-0.5} className="h-full">
-        {/* ESQUERDA — topo (visível em todas as telas) */}
-        <FloatingElement
-          depth={1}
-          className="top-[7%] left-[2%] sm:top-[10%] sm:left-[4%] md:top-[12%] md:left-[7%]"
-        >
-          <PhotoCard
-            src={exampleImages[1].url}
-            alt={exampleImages[1].title}
-            className="w-32 h-28 sm:w-36 sm:h-28 md:w-60 md:h-48 lg:w-72 lg:h-56"
-            rotation="rotate(-6deg)"
-            delay={0.5}
-            sizes="(min-width: 1024px) 288px, (min-width: 768px) 240px, (min-width: 640px) 144px, 128px"
-            priority
-          />
-        </FloatingElement>
+      {/* Parede de imagens (parallax no scroll) — faixa inferior */}
+      <HeroGallery />
 
-        {/* DIREITA — topo (visível em todas as telas) */}
-        <FloatingElement
-          depth={2}
-          className="top-[7%] right-[2%] sm:top-[10%] sm:right-[4%] md:top-[12%] md:right-[7%]"
-        >
-          <PhotoCard
-            src={exampleImages[3].url}
-            alt={exampleImages[3].title}
-            className="w-32 h-28 sm:w-36 sm:h-28 md:w-60 md:h-52 lg:w-72 lg:h-60"
-            rotation="rotate(6deg)"
-            delay={0.9}
-            sizes="(min-width: 1024px) 288px, (min-width: 768px) 240px, (min-width: 640px) 144px, 128px"
-            priority
-          />
-        </FloatingElement>
-
-        {/* ESQUERDA — base */}
-        <FloatingElement
-          depth={3}
-          className="top-[70%] left-[2%] sm:top-[60%] sm:left-[3%] md:top-[54%] md:left-[5%]"
-        >
-          <PhotoCard
-            src={exampleImages[2].url}
-            alt={exampleImages[2].title}
-            className="w-32 h-32 sm:w-44 sm:h-44 md:w-64 md:h-64 lg:w-80 lg:h-80"
-            rotation="rotate(-3deg)"
-            delay={0.7}
-            sizes="(min-width: 1024px) 320px, (min-width: 768px) 256px, (min-width: 640px) 176px, 128px"
-          />
-        </FloatingElement>
-
-        {/* DIREITA — base */}
-        <FloatingElement
-          depth={1}
-          className="top-[70%] right-[2%] sm:top-[60%] sm:right-[3%] md:top-[54%] md:right-[5%]"
-        >
-          <PhotoCard
-            src={exampleImages[4].url}
-            alt={exampleImages[4].title}
-            className="w-32 h-32 sm:w-44 sm:h-44 md:w-64 md:h-64 lg:w-80 lg:h-80"
-            rotation="rotate(3deg)"
-            delay={1.1}
-            sizes="(min-width: 1024px) 320px, (min-width: 768px) 256px, (min-width: 640px) 176px, 128px"
-          />
-        </FloatingElement>
-
-        {/* CENTRO — pequena, atrás (decorativa) — só md+ */}
-        <FloatingElement
-          depth={0.5}
-          className="hidden md:block top-[5%] left-1/2 -translate-x-1/2"
-        >
-          <PhotoCard
-            src={exampleImages[0].url}
-            alt={exampleImages[0].title}
-            className="md:w-28 md:h-24 lg:w-32 lg:h-28"
-            rotation="rotate(-10deg)"
-            delay={1.3}
-            sizes="(min-width: 1024px) 128px, 112px"
-            opacity={0.9}
-          />
-        </FloatingElement>
-      </Floating>
+      {/* Degradê no rodapé — dissolve as imagens no fundo, sem linha de emenda */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 z-10 pointer-events-none"
+        style={{
+          height: "26%",
+          background:
+            "linear-gradient(to bottom, rgba(15,9,6,0) 0%, rgba(15,9,6,0.6) 55%, #0F0906 100%)",
+        }}
+      />
 
       <div className="flex flex-col justify-center items-center w-[300px] sm:w-[440px] md:w-[640px] lg:w-[820px] max-w-[92vw] z-30 pointer-events-auto">
         {/* Announcement pill */}
@@ -330,7 +144,7 @@ export function Hero() {
           </div>
           <div className="order-1 sm:order-2">
             <ShinyButton
-              href={WHATSAPP}
+              href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
               size="default"

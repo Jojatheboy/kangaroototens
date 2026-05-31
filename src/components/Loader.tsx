@@ -92,15 +92,21 @@ export function Loader() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    const lock = (v: string) => {
+      document.documentElement.style.overflow = v;
+      document.body.style.overflow = v;
+    };
+    lock("hidden");
+    // garante que comece do topo enquanto a cortina está ativa
+    window.scrollTo(0, 0);
     const t = setTimeout(() => {
       setDone(true);
-      document.body.style.overflow = "";
+      lock("");
     }, DURATION + HOLD);
 
     return () => {
       clearTimeout(t);
-      document.body.style.overflow = "";
+      lock("");
     };
   }, []);
 

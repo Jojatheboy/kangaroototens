@@ -1,9 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const WHATSAPP =
-  "https://wa.me/5551996752150?text=Olá%20Kangaroo,%20quero%20um%20orçamento%20para%20o%20meu%20evento.";
+import { whatsappUrl } from "@/lib/site";
 
 export function WhatsAppFloat() {
   return (
@@ -66,7 +64,7 @@ export function WhatsAppFloat() {
 
       {/* Botão verde — sempre visível */}
       <motion.a
-        href={WHATSAPP}
+        href={whatsappUrl()}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Falar no WhatsApp"

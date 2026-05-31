@@ -1,21 +1,20 @@
 import Image from "next/image";
-import { PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Logo = {
   src: string;
   alt: string;
-  /** Altura em px (mobile e desktop usam mesmo valor proporcional). */
+  /** Altura em px. */
   height?: number;
   /** Inverter cor pra logos monocromáticos pretos aparecerem em bg dark. */
   invert?: boolean;
-  /** Forçar bg claro no card (pra logos que têm texto preto sobre transparente). */
+  /** Forçar bg claro no card (pra logos com tinta escura sobre transparente). */
   lightBg?: boolean;
 };
 
 type LogoCloudProps = React.ComponentProps<"div"> & {
   logos: Logo[];
-  /** Indices (0-based) que recebem bg "tinted" pra alternância. Ex: [0,2,5,7]. */
+  /** Indices (0-based) que recebem bg "tinted" pra alternância. */
   tintedIndices?: number[];
 };
 
@@ -26,57 +25,24 @@ export function LogoCloud({
   ...props
 }: LogoCloudProps) {
   const tinted = new Set(tintedIndices);
-  const cols = 4;
-  const total = logos.length;
 
   return (
     <div
-      className={cn(
-        "relative grid grid-cols-2 md:grid-cols-4",
-        className
-      )}
-      style={{ borderLeft: "1px solid var(--c-line)", borderRight: "1px solid var(--c-line)" }}
+      className={cn("flex flex-wrap justify-center", className)}
+      style={{
+        borderTop: "1px solid var(--c-line)",
+        borderBottom: "1px solid var(--c-line)",
+      }}
       {...props}
     >
-      <div
-        className="-translate-x-1/2 -top-px pointer-events-none absolute left-1/2 w-screen"
-        style={{ borderTop: "1px solid var(--c-line)" }}
-      />
-
-      {logos.map((logo, idx) => {
-        const row = Math.floor(idx / cols);
-        const col = idx % cols;
-        const totalRows = Math.ceil(total / cols);
-        const isLastRow = row === totalRows - 1;
-        const isLastCol = col === cols - 1;
-
-        return (
-          <LogoCard
-            key={logo.alt}
-            logo={logo}
-            tinted={tinted.has(idx)}
-            className={cn(
-              !isLastCol && "md:[border-right-style:solid] md:[border-right-width:1px]",
-              !isLastRow && "[border-bottom-style:solid] [border-bottom-width:1px]"
-            )}
-          >
-            {/* Plus decorativo no canto inferior-direito (exceto última coluna/última linha) */}
-            {!isLastCol && !isLastRow && (
-              <PlusIcon
-                aria-hidden="true"
-                className="-right-[12.5px] -bottom-[12.5px] absolute z-10 hidden md:block size-6"
-                strokeWidth={1}
-                style={{ color: "var(--c-text-mute)", opacity: 0.5 }}
-              />
-            )}
-          </LogoCard>
-        );
-      })}
-
-      <div
-        className="-translate-x-1/2 -bottom-px pointer-events-none absolute left-1/2 w-screen"
-        style={{ borderBottom: "1px solid var(--c-line)" }}
-      />
+      {logos.map((logo, idx) => (
+        <LogoCard
+          key={logo.alt}
+          logo={logo}
+          tinted={tinted.has(idx)}
+          className="basis-1/3 sm:basis-1/5 lg:basis-[14.2857%]"
+        />
+      ))}
     </div>
   );
 }
@@ -86,17 +52,11 @@ type LogoCardProps = React.ComponentProps<"div"> & {
   tinted?: boolean;
 };
 
-function LogoCard({
-  logo,
-  className,
-  children,
-  tinted = false,
-  ...props
-}: LogoCardProps) {
+function LogoCard({ logo, className, tinted = false, ...props }: LogoCardProps) {
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center px-4 py-10 md:p-12",
+        "relative flex items-center justify-center px-3 py-7 md:px-4 md:py-9",
         className
       )}
       style={{
@@ -121,7 +81,6 @@ function LogoCard({
           opacity: logo.invert ? 0.85 : 1,
         }}
       />
-      {children}
     </div>
   );
 }

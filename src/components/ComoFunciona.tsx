@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Reveal } from "./Reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
-import { ShinyButton } from "@/components/ui/shiny-button";
+import {
+  eyebrowStyle,
+  sectionLeadStyle,
+  sectionTitleStyle,
+} from "@/lib/section-styles";
 import {
   AnimatedList,
   type AnimatedListItem,
 } from "@/components/ui/animated-list";
 import { Folder } from "@/components/ui/folder";
-import { Noise } from "@/components/ui/noise";
-import { MagicRings } from "@/components/ui/magic-rings";
 import { RadialBackdrop } from "@/components/ui/radial-backdrop";
 import {
   Camera,
@@ -26,75 +28,93 @@ import {
   Building2,
 } from "lucide-react";
 
-const WHATSAPP =
-  "https://wa.me/5551996752150?text=Olá%20Kangaroo,%20quero%20um%20orçamento%20para%20o%20meu%20evento.";
-
 /* ============ MINI MOCKUPS ============ */
 
+const CONVERSA: { side: "user" | "kang"; text: string }[] = [
+  { side: "user", text: "Oi! Casamento dia 12/07, 150 pessoas 🎉" },
+  { side: "kang", text: "Perfeito! Pensei em totem + 360°" },
+  { side: "user", text: "Pode mandar a proposta 🙌" },
+];
+
 function MockConversa() {
-  const bubbles: { side: "user" | "kang"; text: string }[] = [
-    { side: "user", text: "Oi! Casamento dia 12/07, 150 pessoas 🎉" },
-    { side: "kang", text: "Perfeito! Pensei em totem + 360°" },
-    { side: "user", text: "Pode mandar a proposta 🙌" },
-  ];
+  // o chat se "digita" sozinho, em loop
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCount((c) => (c >= CONVERSA.length ? 0 : c + 1));
+    }, 1300);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div className="absolute inset-0 flex flex-col gap-2.5 px-6 pr-20 pt-24 pb-6 justify-end">
-      {bubbles.map((b, i) =>
-        b.side === "user" ? (
-          <div
+      <AnimatePresence mode="popLayout">
+        {CONVERSA.slice(0, count).map((b, i) => (
+          <motion.div
             key={i}
-            className="self-end max-w-[78%] rounded-2xl rounded-tr-md px-4 py-2.5"
-            style={{
-              background: "#25D366",
-              color: "#0F1A0F",
-              fontFamily: "var(--font-geist)",
-              fontSize: 14.5,
-              lineHeight: 1.4,
-              boxShadow: "0 4px 12px -6px rgba(37, 211, 102, 0.4)",
-            }}
+            layout
+            initial={{ opacity: 0, y: 12, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className={
+              b.side === "user"
+                ? "self-end max-w-[78%] rounded-2xl rounded-tr-md px-4 py-2.5"
+                : "self-start max-w-[80%] rounded-2xl rounded-tl-md px-4 py-2.5"
+            }
+            style={
+              b.side === "user"
+                ? {
+                    background: "#25D366",
+                    color: "#0F1A0F",
+                    fontFamily: "var(--font-geist)",
+                    fontSize: 14.5,
+                    lineHeight: 1.4,
+                    boxShadow: "0 4px 12px -6px rgba(37, 211, 102, 0.4)",
+                  }
+                : {
+                    background: "var(--c-surface-2)",
+                    border: "1px solid var(--c-line)",
+                    color: "var(--c-text-primary)",
+                    fontFamily: "var(--font-geist)",
+                    fontSize: 14.5,
+                    lineHeight: 1.4,
+                  }
+            }
           >
             {b.text}
-          </div>
-        ) : (
-          <div
-            key={i}
-            className="self-start max-w-[80%] rounded-2xl rounded-tl-md px-4 py-2.5"
-            style={{
-              background: "var(--c-surface-2)",
-              border: "1px solid var(--c-line)",
-              color: "var(--c-text-primary)",
-              fontFamily: "var(--font-geist)",
-              fontSize: 14.5,
-              lineHeight: 1.4,
-            }}
-          >
-            {b.text}
-          </div>
-        )
+          </motion.div>
+        ))}
+      </AnimatePresence>
+
+      {/* Typing indicator — enquanto ainda "faltam" mensagens */}
+      {count < CONVERSA.length && (
+        <motion.div
+          layout
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="self-start inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full"
+          style={{
+            background: "var(--c-surface-2)",
+            border: "1px solid var(--c-line)",
+            width: "fit-content",
+          }}
+        >
+          <span
+            className="block w-1.5 h-1.5 rounded-full animate-pulse"
+            style={{ background: "var(--c-orange)" }}
+          />
+          <span
+            className="block w-1.5 h-1.5 rounded-full animate-pulse"
+            style={{ background: "var(--c-orange)", animationDelay: "200ms" }}
+          />
+          <span
+            className="block w-1.5 h-1.5 rounded-full animate-pulse"
+            style={{ background: "var(--c-orange)", animationDelay: "400ms" }}
+          />
+        </motion.div>
       )}
-      {/* Typing indicator */}
-      <div
-        className="self-start inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full"
-        style={{
-          background: "var(--c-surface-2)",
-          border: "1px solid var(--c-line)",
-          width: "fit-content",
-        }}
-      >
-        <span
-          className="block w-1.5 h-1.5 rounded-full animate-pulse"
-          style={{ background: "var(--c-orange)" }}
-        />
-        <span
-          className="block w-1.5 h-1.5 rounded-full animate-pulse"
-          style={{ background: "var(--c-orange)", animationDelay: "200ms" }}
-        />
-        <span
-          className="block w-1.5 h-1.5 rounded-full animate-pulse"
-          style={{ background: "var(--c-orange)", animationDelay: "400ms" }}
-        />
-      </div>
     </div>
   );
 }
@@ -459,25 +479,14 @@ function MockEvento() {
 
   return (
     <>
-      {/* Magic rings no fundo */}
-      <div className="absolute inset-0 pointer-events-none opacity-70">
-        <MagicRings
-          color="#FF5A2A"
-          colorTwo="#F5A623"
-          ringCount={6}
-          speed={0.7}
-          attenuation={12}
-          lineThickness={1.6}
-          baseRadius={0.32}
-          radiusStep={0.09}
-          scaleRate={0.12}
-          opacity={1}
-          noiseAmount={0.06}
-          ringGap={1.5}
-          fadeIn={0.7}
-          fadeOut={0.5}
-        />
-      </div>
+      {/* MagicRings (WebGL/THREE.js) removido — causava travamento */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-60"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 45%, rgba(255,90,42,0.18), transparent 60%)",
+        }}
+      />
       {/* Folder por cima */}
       <div className="relative z-10 flex items-end justify-center w-full h-full pb-2 pt-24">
         <Folder
@@ -496,32 +505,32 @@ const steps = [
   {
     num: "01",
     tag: "Conversa",
-    title: "A gente te ajuda a escolher",
-    text: "Chama no WhatsApp ou preenche o form. Em até 2h voltamos com sugestão de combo e valor pro seu evento.",
+    title: "Você conta o evento",
+    text: "Chama no WhatsApp e diz o que vai rolar. Em até 2 horas a gente volta com a melhor pegada e o valor.",
     Mockup: MockConversa,
     noise: true,
   },
   {
     num: "02",
     tag: "Curadoria",
-    title: "Escolhemos o combo ideal",
-    text: "Sugerimos um ou mais equipamentos pra atingir o efeito que você quer. Você combina, mistura, ajusta.",
+    title: "A gente monta o combo",
+    text: "Sugerimos os equipamentos que geram o efeito que você quer no seu público. Você ajusta o que quiser.",
     Mockup: MockCuradoria,
     noise: true,
   },
   {
     num: "03",
     tag: "Personalização",
-    title: "Adaptamos à sua marca",
-    text: "Moldura e identidade visual exclusivas do evento. Quando o convidado tira a foto, sai com a sua cara.",
+    title: "Tudo com a cara do evento",
+    text: "Moldura e identidade visual exclusivas. Cada foto sai com a marca e o clima da sua festa.",
     Mockup: MockPersonalizacao,
     noise: true,
   },
   {
     num: "04",
-    tag: "Entrega",
-    title: "Você curte, a gente entrega",
-    text: "Na hora, cada convidado sai com a foto. Depois, você recebe a galeria digital completa pra usar nas redes.",
+    tag: "No evento",
+    title: "Foto na hora, galeria depois",
+    text: "No dia, cada convidado sai com a foto na mão. Depois, você recebe a galeria completa e o relatório.",
     Mockup: MockEvento,
     noise: true,
   },
@@ -531,7 +540,11 @@ const steps = [
 
 export function ComoFunciona() {
   return (
-    <section id="como-funciona" className="pt-16 sm:pt-24 pb-16 sm:pb-24">
+    <section
+      id="como-funciona"
+      aria-label="Como funciona"
+      className="pt-10 sm:pt-14 pb-20 sm:pb-28"
+    >
       <div
         className="px-4 sm:px-6"
         style={{
@@ -541,43 +554,13 @@ export function ComoFunciona() {
       >
         <Reveal>
           <div className="text-center mx-auto" style={{ maxWidth: 720 }}>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 500,
-                fontSize: 13,
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                color: "var(--c-text-mute)",
-                marginBottom: 14,
-              }}
-            >
-              Como funciona
-            </p>
+            <p style={eyebrowStyle}>Como funciona</p>
             <TextReveal
               as="h2"
               text="Da primeira mensagem ao último flash."
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 700,
-                fontSize: "clamp(28px, 4.2vw, 44px)",
-                lineHeight: 1.08,
-                letterSpacing: "-0.03em",
-                color: "var(--c-text-primary)",
-                marginBottom: 14,
-                display: "block",
-              }}
+              style={sectionTitleStyle}
             />
-            <p
-              style={{
-                fontSize: 16,
-                lineHeight: 1.55,
-                color: "var(--c-text-secondary)",
-                maxWidth: "48ch",
-                margin: "0 auto",
-                marginBottom: 56,
-              }}
-            >
+            <p style={{ ...sectionLeadStyle, marginBottom: 56 }}>
               Quatro passos. Sem complicação, sem você ter que aprender nada de
               tecnologia. A gente cuida do resto.
             </p>
@@ -645,9 +628,7 @@ export function ComoFunciona() {
                     <div className="relative z-10 flex items-center justify-center w-full h-full">
                       <Mockup />
                     </div>
-                    {step.noise && (
-                      <Noise patternAlpha={20} patternRefreshInterval={3} />
-                    )}
+                    {/* Noise (canvas redesenhado a cada 3 frames ×4) removido — causava travamento */}
                   </div>
 
                   {/* Texto */}

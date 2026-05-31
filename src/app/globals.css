@@ -2,15 +2,15 @@
 @import "tw-animate-css";
 
 :root {
-  /* Base — dark mode tingido warm */
-  --background: #0F0906;
+  /* Base — dark mode (quase preto, warmth mínima) */
+  --background: #0A0908;
   --foreground: #FBF6F1;
   --foreground-rgb: 251, 246, 241;
 
   /* Tokens Kangaroo */
-  --c-canvas: #0F0906;
-  --c-surface: #1A120B;
-  --c-surface-2: #241813;
+  --c-canvas: #0A0908;
+  --c-surface: #141211;
+  --c-surface-2: #1C1917;
   --c-text-primary: #FBF6F1;
   --c-text-secondary: #C7BAAD;
   --c-text-mute: #8A7D70;
@@ -27,9 +27,9 @@
   --c-purple: #9A6BE0;
 
   /* Marketing tokens (alinhado com assets-devweb) */
-  --marketing-page-bg: #0F0906;
-  --marketing-primary-bg: #1A120B;
-  --marketing-primary-bg-hover: #241813;
+  --marketing-page-bg: #0A0908;
+  --marketing-primary-bg: #141211;
+  --marketing-primary-bg-hover: #1C1917;
   --marketing-primary-text: #FBF6F1;
 
   --marketing-accent: #FF5A2A;
@@ -73,10 +73,17 @@
   --color-mute: var(--c-text-mute);
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* compensa o header fixo: âncoras (#equipamentos, #faq…) não ficam
+     escondidas atrás dele ao navegar pelo menu / skip-link */
+  scroll-padding-top: 88px;
+}
 
 html, body {
-  overflow-x: hidden;
+  /* clip (não hidden) — clipa o horizontal sem virar container de scroll,
+     senão quebra position: sticky das seções */
+  overflow-x: clip;
   max-width: 100vw;
   width: 100%;
   position: relative;
@@ -85,6 +92,17 @@ html, body {
 @keyframes marquee-x {
   from { transform: translateX(0); }
   to   { transform: translateX(-100%); }
+}
+
+/* wordmark do footer: só as linhas (outline estático, sem animação) */
+.kangaroo-wordmark {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.14);
+  -webkit-text-stroke-width: 1.5px;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kangaroo-wordmark { animation: none; }
 }
 
 body {

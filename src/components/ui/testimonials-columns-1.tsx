@@ -38,12 +38,14 @@ export function TestimonialsColumn({
             {testimonials.map(({ text, image, name, role }, i) => (
               <div
                 key={i}
-                className="p-7 sm:p-8 w-full max-w-xs"
+                className="p-7 sm:p-8 w-full"
                 style={{
                   background: "var(--c-surface)",
                   border: "1px solid var(--c-line)",
                   borderRadius: 16,
                   boxShadow: "0 8px 24px -12px rgba(0, 0, 0, 0.4)",
+                  transition:
+                    "background-color 0.7s ease, border-color 0.7s ease",
                 }}
               >
                 <p
@@ -52,6 +54,7 @@ export function TestimonialsColumn({
                     lineHeight: 1.55,
                     color: "var(--c-text-primary)",
                     fontFamily: "var(--font-geist)",
+                    transition: "color 0.7s ease",
                   }}
                 >
                   {text}
@@ -74,6 +77,7 @@ export function TestimonialsColumn({
                         fontSize: 14,
                         color: "var(--c-text-primary)",
                         letterSpacing: "-0.01em",
+                        transition: "color 0.7s ease",
                       }}
                     >
                       {name}
@@ -84,6 +88,7 @@ export function TestimonialsColumn({
                         fontSize: 12,
                         color: "var(--c-text-mute)",
                         lineHeight: 1.4,
+                        transition: "color 0.7s ease",
                       }}
                     >
                       {role}

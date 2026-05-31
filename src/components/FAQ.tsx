@@ -57,7 +57,7 @@ export function FAQ() {
   );
 
   return (
-    <section id="faq" className="pt-16 sm:pt-24 pb-16 sm:pb-24">
+    <section id="faq" aria-label="Perguntas frequentes" className="pt-10 sm:pt-14 pb-10 sm:pb-14">
       <div
         className="px-4 sm:px-6"
         style={{

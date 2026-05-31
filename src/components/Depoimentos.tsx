@@ -1,11 +1,23 @@
 "use client";
 
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { TextReveal } from "@/components/ui/text-reveal";
 import {
   TestimonialsColumn,
   type TestimonialItem,
 } from "@/components/ui/testimonials-columns-1";
+
+// tema claro aplicado quando a seção entra na tela (sobrescreve os tokens)
+const lightVars: CSSProperties = {
+  ["--c-canvas" as string]: "#FBF8F3",
+  ["--c-surface" as string]: "#FFFFFF",
+  ["--c-line" as string]: "rgba(0,0,0,0.08)",
+  ["--c-line-strong" as string]: "rgba(0,0,0,0.16)",
+  ["--c-text-primary" as string]: "#1A120B",
+  ["--c-text-secondary" as string]: "#5A5048",
+  ["--c-text-mute" as string]: "#9A9088",
+};
 
 const testimonials: TestimonialItem[] = [
   {
@@ -69,8 +81,60 @@ const col2 = testimonials.slice(3, 6);
 const col3 = testimonials.slice(6, 9);
 
 export function Depoimentos() {
+  const ref = useRef<HTMLElement>(null);
+  const [light, setLight] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => setLight(e.isIntersecting),
+      { rootMargin: "-25% 0px -25% 0px", threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <section id="depoimentos" className="pt-16 sm:pt-24 pb-16 sm:pb-24 relative">
+    <section
+      ref={ref}
+      id="depoimentos"
+      aria-label="Depoimentos de clientes"
+      className="pt-10 sm:pt-14 pb-10 sm:pb-14 relative"
+      style={{
+        background: "var(--c-canvas)",
+        transition: "background-color 0.7s ease",
+        ...(light ? lightVars : {}),
+      }}
+    >
+      {/* divisor curvo no topo — acompanha o tema da seção */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1440 56"
+        preserveAspectRatio="none"
+        className="absolute left-0 w-full pointer-events-none z-10"
+        style={{ top: -55, height: 56 }}
+      >
+        <path
+          d="M0,56 L0,34 C420,4 1020,4 1440,34 L1440,56 Z"
+          style={{ fill: "var(--c-canvas)", transition: "fill 0.7s ease" }}
+        />
+      </svg>
+
+      {/* divisor curvo na base */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1440 56"
+        preserveAspectRatio="none"
+        className="absolute left-0 w-full pointer-events-none z-10"
+        style={{ bottom: -55, height: 56, transform: "rotate(180deg)" }}
+      >
+        <path
+          d="M0,56 L0,34 C420,4 1020,4 1440,34 L1440,56 Z"
+          style={{ fill: "var(--c-canvas)", transition: "fill 0.7s ease" }}
+        />
+      </svg>
+
       <div className="px-4 sm:px-6" style={{ maxWidth: 1220, margin: "0 auto" }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -89,6 +153,7 @@ export function Depoimentos() {
               letterSpacing: "0.12em",
               color: "var(--c-text-mute)",
               marginBottom: 14,
+              transition: "color 0.7s ease",
             }}
           >
             Depoimentos
@@ -96,7 +161,7 @@ export function Depoimentos() {
 
           <TextReveal
             as="h2"
-            text="Quem usou, recomenda."
+            text="Quem escolheu, recomenda."
             className="text-center"
             style={{
               fontFamily: "var(--font-display)",
@@ -107,6 +172,7 @@ export function Depoimentos() {
               color: "var(--c-text-primary)",
               marginBottom: 14,
               display: "block",
+              transition: "color 0.7s ease",
             }}
           />
           <p
@@ -116,6 +182,7 @@ export function Depoimentos() {
               lineHeight: 1.55,
               color: "var(--c-text-secondary)",
               maxWidth: "48ch",
+              transition: "color 0.7s ease",
             }}
           >
             Casais, marcas e produtores que confiaram na Kangaroo pra
@@ -124,7 +191,7 @@ export function Depoimentos() {
         </motion.div>
 
         <div
-          className="flex justify-center gap-6 mt-14"
+          className="flex gap-6 mt-14"
           style={{
             maxHeight: 720,
             overflow: "hidden",
@@ -134,15 +201,15 @@ export function Depoimentos() {
               "linear-gradient(to bottom, transparent, black 18%, black 82%, transparent)",
           }}
         >
-          <TestimonialsColumn testimonials={col1} duration={20} />
+          <TestimonialsColumn testimonials={col1} duration={20} className="flex-1" />
           <TestimonialsColumn
             testimonials={col2}
-            className="hidden md:block"
+            className="flex-1 hidden md:block"
             duration={26}
           />
           <TestimonialsColumn
             testimonials={col3}
-            className="hidden lg:block"
+            className="flex-1 hidden lg:block"
             duration={22}
           />
         </div>

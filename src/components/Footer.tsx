@@ -6,13 +6,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_BASE } from "@/lib/site";
 
 const equipamentos = [
   { l: "Totem Fotográfico", h: "#equipamentos" },
+  { l: "Totem Slim", h: "#equipamentos" },
   { l: "Plataforma 360°", h: "#equipamentos" },
   { l: "Plataforma 180°", h: "#equipamentos" },
-  { l: "Cabine Fotográfica", h: "#equipamentos" },
   { l: "Cabine de Prêmios", h: "#equipamentos" },
+  { l: "Cabine de Prêmios Pocket", h: "#equipamentos" },
+  { l: "Totem de Carregamento", h: "#equipamentos" },
   { l: "Cabine Telefônica", h: "#equipamentos" },
 ];
 
@@ -24,10 +27,10 @@ const empresa = [
 ];
 
 const contato = [
-  { l: "(51) 99675-2150", h: "https://wa.me/5551996752150", external: true },
+  { l: "(51) 99675-2150", h: WHATSAPP_BASE, external: true },
   {
-    l: "@kangaroo.totens",
-    h: "https://instagram.com/kangaroo.totens",
+    l: INSTAGRAM_HANDLE,
+    h: INSTAGRAM_URL,
     external: true,
   },
 ];
@@ -85,7 +88,7 @@ export function Footer() {
         </div>
 
         {/* MOBILE: accordions */}
-        <div className="sm:hidden">
+        <nav aria-label="Navegação do rodapé" className="sm:hidden">
           <Accordion
             type="single"
             collapsible
@@ -132,7 +135,7 @@ export function Footer() {
               </AccordionItem>
             ))}
           </Accordion>
-        </div>
+        </nav>
 
         <div
           className="mt-6 sm:mt-8 pt-5 flex flex-col sm:flex-row items-center justify-between gap-3"
@@ -160,6 +163,28 @@ export function Footer() {
           </p>
         </div>
       </div>
+
+      {/* Wordmark gigante outline — só as linhas (estático) */}
+      <div
+        aria-hidden="true"
+        className="relative w-full overflow-hidden mt-10 sm:mt-14 pointer-events-none select-none"
+      >
+        <div
+          className="flex items-end justify-center leading-[0.78] kangaroo-wordmark"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 800,
+            fontSize: "min(23vw, 520px)",
+            letterSpacing: "-0.055em",
+            color: "transparent",
+            whiteSpace: "nowrap",
+            transform: "translateY(20%)",
+            WebkitTextStrokeWidth: "1.5px",
+          }}
+        >
+          kangaroo
+        </div>
+      </div>
     </footer>
   );
 }
@@ -172,7 +197,7 @@ function FooterColumn({
   items: { l: string; h: string; external?: boolean }[];
 }) {
   return (
-    <div>
+    <nav aria-label={title}>
       <h4
         className="mb-4"
         style={{
@@ -204,6 +229,6 @@ function FooterColumn({
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 }

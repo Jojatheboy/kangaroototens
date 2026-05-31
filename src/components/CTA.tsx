@@ -1,10 +1,20 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import {
+  cloneElement,
+  isValidElement,
+  useId,
+  useState,
+  FormEvent,
+  type ReactElement,
+} from "react";
 import { motion } from "framer-motion";
 import { ShinyButton } from "@/components/ui/shiny-button";
-
-const WHATSAPP_BASE = "https://wa.me/5551996752150";
+import {
+  INSTAGRAM_HANDLE,
+  INSTAGRAM_URL,
+  whatsappUrl,
+} from "@/lib/site";
 
 const tiposEvento = [
   "Casamento",
@@ -32,10 +42,9 @@ function buildWhatsAppLink(data: {
     `WhatsApp: ${data.whatsapp}`,
     `Tipo de evento: ${data.tipo}`,
     `Data prevista: ${data.data || "ainda definindo"}`,
-    data.mensagem ? `` : "",
     data.mensagem ? `Detalhes: ${data.mensagem}` : "",
   ].filter(Boolean);
-  return `${WHATSAPP_BASE}?text=${encodeURIComponent(lines.join("\n"))}`;
+  return whatsappUrl(lines.join("\n"));
 }
 
 export function CTA() {
@@ -59,6 +68,7 @@ export function CTA() {
   return (
     <section
       id="contato"
+      aria-label="Solicitar orçamento"
       className="pt-12 sm:pt-16 pb-6 sm:pb-8 relative"
       style={{ background: "var(--c-canvas)" }}
     >
@@ -126,7 +136,7 @@ export function CTA() {
             style={{ maxWidth: 1280, margin: "0 auto" }}
           >
           {/* Coluna texto */}
-          <div>
+          <div className="text-center lg:text-left">
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -145,6 +155,7 @@ export function CTA() {
               Pronto pra transformar seu evento?
             </motion.h2>
             <p
+              className="mx-auto lg:mx-0"
               style={{
                 fontSize: 16,
                 lineHeight: 1.6,
@@ -157,11 +168,9 @@ export function CTA() {
               resposta vem em até 2h em horário comercial.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
               <ShinyButton
-                href={`${WHATSAPP_BASE}?text=${encodeURIComponent(
-                  "Olá Kangaroo, quero um orçamento para o meu evento."
-                )}`}
+                href={whatsappUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 size="lg"
@@ -171,7 +180,7 @@ export function CTA() {
             </div>
 
             <div
-              className="mt-10 pt-8 grid grid-cols-2 gap-6"
+              className="mt-10 pt-8 grid grid-cols-2 gap-6 text-center lg:text-left"
               style={{ borderTop: "1px solid var(--c-line)" }}
             >
               <div>
@@ -213,7 +222,7 @@ export function CTA() {
                   Instagram
                 </p>
                 <a
-                  href="https://instagram.com/kangaroo.totens"
+                  href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="no-underline"
@@ -222,7 +231,7 @@ export function CTA() {
                     color: "var(--c-text-primary)",
                   }}
                 >
-                  @kangaroo.totens
+                  {INSTAGRAM_HANDLE}
                 </a>
               </div>
             </div>
@@ -357,9 +366,16 @@ function Field({
   required?: boolean;
   children: React.ReactNode;
 }) {
+  const id = useId();
+  // associa o <label> ao controle injetando o mesmo id (sem mudar o layout)
+  const control = isValidElement(children)
+    ? cloneElement(children as ReactElement<{ id?: string }>, { id })
+    : children;
+
   return (
     <div className="mb-4">
       <label
+        htmlFor={id}
         className="block mb-1.5"
         style={{
           fontFamily: "var(--font-geist-mono)",
@@ -374,7 +390,7 @@ function Field({
           <span style={{ color: "var(--c-orange)", marginLeft: 4 }}>*</span>
         )}
       </label>
-      {children}
+      {control}
     </div>
   );
 }

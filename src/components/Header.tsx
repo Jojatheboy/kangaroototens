@@ -6,11 +6,11 @@ import {
   Camera,
   Disc3,
   Disc,
-  Frame,
   Gift,
+  BatteryCharging,
   Mic,
 } from "lucide-react";
-import { useState, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 
 import {
   Accordion,
@@ -34,9 +34,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ShinyButton } from "@/components/ui/shiny-button";
-
-const WHATSAPP =
-  "https://wa.me/5551996752150?text=Olá%20Kangaroo,%20quero%20um%20orçamento%20para%20o%20meu%20evento.";
+import { whatsappUrl } from "@/lib/site";
 
 interface MenuItem {
   title: string;
@@ -58,6 +56,12 @@ const menu: MenuItem[] = [
         url: "#equipamentos",
       },
       {
+        title: "Totem Slim",
+        description: "A versão leve e discreta do totem",
+        icon: <Camera className="size-5 shrink-0" style={{ color: "var(--c-text-secondary)" }} />,
+        url: "#equipamentos",
+      },
+      {
         title: "Plataforma 360°",
         description: "Vídeo dinâmico pronto pras redes",
         icon: <Disc3 className="size-5 shrink-0" style={{ color: "var(--c-text-secondary)" }} />,
@@ -70,15 +74,21 @@ const menu: MenuItem[] = [
         url: "#equipamentos",
       },
       {
-        title: "Cabine Fotográfica",
-        description: "Cabine física personalizada com a marca",
-        icon: <Frame className="size-5 shrink-0" style={{ color: "var(--c-text-secondary)" }} />,
-        url: "#equipamentos",
-      },
-      {
         title: "Cabine de Prêmios",
         description: "Interação que distribui recompensas",
         icon: <Gift className="size-5 shrink-0" style={{ color: "var(--c-text-secondary)" }} />,
+        url: "#equipamentos",
+      },
+      {
+        title: "Cabine de Prêmios Pocket",
+        description: "A mesma diversão num formato compacto",
+        icon: <Gift className="size-5 shrink-0" style={{ color: "var(--c-text-secondary)" }} />,
+        url: "#equipamentos",
+      },
+      {
+        title: "Totem de Carregamento",
+        description: "Recarrega vários celulares ao mesmo tempo",
+        icon: <BatteryCharging className="size-5 shrink-0" style={{ color: "var(--c-text-secondary)" }} />,
         url: "#equipamentos",
       },
       {
@@ -102,7 +112,7 @@ function Logo() {
         src="/kangaroo-logo.svg"
         alt="Kangaroo"
         style={{
-          height: 26,
+          height: 21,
           width: "auto",
           filter: "brightness(0) invert(1)",
         }}
@@ -114,7 +124,12 @@ function Logo() {
 function HeaderCta({ fullWidth = false }: { fullWidth?: boolean }) {
   return (
     <div className={fullWidth ? "w-full [&_a]:w-full" : ""}>
-      <ShinyButton href={WHATSAPP} target="_blank" rel="noopener noreferrer">
+      <ShinyButton
+        href={whatsappUrl()}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={fullWidth ? "" : "shiny-cta-sm"}
+      >
         Solicitar orçamento
       </ShinyButton>
     </div>
@@ -245,25 +260,50 @@ function renderMobileMenuItem(item: MenuItem, onNavigate: () => void) {
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Header "ilha": colado e full-width no topo; ao scrollar, descola e encolhe.
+  // Listener passivo que só atualiza o estado ao cruzar o limite (sem re-render
+  // a cada pixel de scroll).
+  useEffect(() => {
+    const onScroll = () => {
+      const s = window.scrollY > 24;
+      setScrolled((prev) => (prev === s ? prev : s));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header
-      className="fixed inset-x-0 top-0 z-[100]"
+      className="fixed inset-x-0 top-0 z-[100] transition-[padding] duration-300 ease-out"
       style={{
-        background: "rgba(15, 9, 6, 0.7)",
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
-        borderBottom: "1px solid var(--c-line)",
+        paddingTop: scrolled ? 12 : 0,
+        paddingLeft: scrolled ? 16 : 0,
+        paddingRight: scrolled ? 16 : 0,
       }}
     >
       <div
-        className="relative px-4 sm:px-6"
-        style={{ maxWidth: 1280, margin: "0 auto" }}
+        className="relative px-6 sm:px-12 mx-auto transition-all duration-300 ease-out"
+        style={{
+          maxWidth: scrolled ? 1080 : 1280,
+          borderRadius: scrolled ? 32 : 0,
+          background: scrolled ? "rgba(15, 9, 6, 0.72)" : "transparent",
+          backdropFilter: scrolled ? "blur(14px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
+          border: scrolled
+            ? "1px solid var(--c-line)"
+            : "1px solid transparent",
+          boxShadow: scrolled ? "0 8px 30px rgba(0, 0, 0, 0.35)" : "none",
+        }}
       >
         {/* DESKTOP */}
         <nav className="hidden lg:flex justify-between items-center h-[64px]">
-          <div className="flex items-center gap-8">
-            <Logo />
+          <Logo />
+          {/* Menu centralizado na pill (absoluto, independente das larguras
+              do logo e do CTA) */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <NavigationMenu>
               <NavigationMenuList>
                 {menu.map((item) => renderMenuItem(item))}
