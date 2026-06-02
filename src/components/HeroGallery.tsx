@@ -23,7 +23,7 @@ const img = (n: number) =>
   `/images/hero-wall/wall-${String(n).padStart(2, "0")}.webp`;
 const vid = (n: number) => ({
   video: `/videos/hero/hero-v${n}.mp4`,
-  poster: `/videos/hero/hero-v${n}-poster.png`,
+  poster: `/videos/hero/hero-v${n}-poster.webp`,
 });
 
 const columns: MediaItem[][] = [
@@ -134,7 +134,7 @@ export function HeroGallery() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-x-0 bottom-0 top-[50%] z-0 overflow-hidden pointer-events-none"
+      className="absolute inset-x-0 bottom-0 top-[62%] sm:top-[50%] z-0 overflow-hidden pointer-events-none"
     >
       <div className="flex gap-2 w-full">
         {columns.map((items, i) => (

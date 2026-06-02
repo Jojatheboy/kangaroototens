@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  images: {
+    // AVIF primeiro (menor que webp), com webp de fallback
+    formats: ["image/avif", "image/webp"],
+  },
 };
 
 export default nextConfig;

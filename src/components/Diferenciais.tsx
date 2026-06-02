@@ -39,7 +39,7 @@ const items: Diferencial[] = [
     icon: <Zap className="w-5 h-5" />,
     tags: ["Interação", "Conexão"],
     video: "/videos/engajamento.mp4",
-    poster: "/videos/engajamento-poster.png",
+    poster: "/videos/engajamento-poster.webp",
   },
   {
     title: "Pronto pra postar",
@@ -49,7 +49,7 @@ const items: Diferencial[] = [
     icon: <Share2 className="w-5 h-5" />,
     tags: ["Na hora", "Redes"],
     video: "/videos/pronto-postar.mp4",
-    poster: "/videos/pronto-postar-poster.png",
+    poster: "/videos/pronto-postar-poster.webp",
   },
   {
     title: "Equipe especializada",
@@ -59,7 +59,7 @@ const items: Diferencial[] = [
     icon: <Users className="w-5 h-5" />,
     tags: ["Operação", "Suporte"],
     video: "/videos/equipe.mp4",
-    poster: "/videos/equipe-poster.png",
+    poster: "/videos/equipe-poster.webp",
   },
   {
     title: "Relatório pós-evento",
@@ -157,7 +157,7 @@ function VideoPanel({ src, poster }: { src: string; poster?: string }) {
       muted
       loop
       playsInline
-      preload="auto"
+      preload="metadata"
       disablePictureInPicture
       controlsList="nodownload noplaybackrate nofullscreen noremoteplayback"
       onContextMenu={(e) => e.preventDefault()}
@@ -412,7 +412,11 @@ export function Diferenciais() {
             >
               <div
                 className="relative w-full"
-                style={{ aspectRatio: "16 / 11", background: "var(--c-surface)" }}
+                style={
+                  item.mock === "relatorio"
+                    ? { height: 500, background: "var(--c-surface)" }
+                    : { aspectRatio: "16 / 11", background: "var(--c-surface)" }
+                }
               >
                 <Visual item={item} />
               </div>

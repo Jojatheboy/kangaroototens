@@ -35,7 +35,7 @@ const eventos: Evento[] = [
     quote:
       "Casamentos, aniversários, formaturas e aniversários de 15. Cada momento eternizado com a tecnologia e a operação da Kangaroo.",
     video: "/videos/sociais.mp4",
-    poster: "/videos/sociais-poster.png",
+    poster: "/videos/sociais-poster.webp",
   },
   {
     icon: Briefcase,
@@ -102,7 +102,7 @@ function CardVideo({ src, poster }: { src: string; poster?: string }) {
       muted
       loop
       playsInline
-      preload="auto"
+      preload="metadata"
       disablePictureInPicture
       controlsList="nodownload noplaybackrate nofullscreen noremoteplayback"
       onContextMenu={(e) => e.preventDefault()}
