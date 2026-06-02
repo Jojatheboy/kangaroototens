@@ -10,7 +10,7 @@ import { whatsappUrl } from "@/lib/site";
 export function Hero() {
   return (
     <section
-      aria-label="Kangaroo — tecnologia interativa para eventos"
+      aria-label="Kangaroo, tecnologia interativa para eventos"
       className="w-full h-[122vh] overflow-hidden flex flex-col items-center justify-start pt-[8vh] relative"
       style={{ background: "var(--c-canvas)" }}
     >
