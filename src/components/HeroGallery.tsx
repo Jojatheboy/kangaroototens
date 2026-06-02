@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -121,6 +121,17 @@ function GalleryColumn({
 
 export function HeroGallery() {
   const { scrollY } = useScroll();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // no mobile zeramos o stagger inicial (offset) das colunas: alinhadas no topo
+  // da parede, ela pode subir sem que a coluna deslocada invada os botões.
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const colClass = [
     "flex-1 flex",
@@ -134,7 +145,7 @@ export function HeroGallery() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-x-0 bottom-0 top-[62%] sm:top-[50%] z-0 overflow-hidden pointer-events-none"
+      className="absolute inset-x-0 bottom-0 top-[46%] sm:top-[50%] z-0 overflow-hidden pointer-events-none"
     >
       <div className="flex gap-2 w-full">
         {columns.map((items, i) => (
@@ -142,7 +153,7 @@ export function HeroGallery() {
             key={i}
             items={items}
             scrollY={scrollY}
-            offset={offsets[i]}
+            offset={isMobile ? 0 : offsets[i]}
             speed={speeds[i]}
             className={colClass[i]}
           />

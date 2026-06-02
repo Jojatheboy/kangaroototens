@@ -91,7 +91,13 @@ export function Hero() {
         >
           <span>Deixe seu </span>
           <LayoutGroup>
-            <motion.span layout className="flex whitespace-pre">
+            {/* mobile: a palavra que gira cai pra linha própria — palavras
+                longas ("compartilhável", "inesquecível") estouravam a largura
+                ao lado de "evento". sm+ volta a ficar inline, onde já cabe. */}
+            <motion.span
+              layout
+              className="flex flex-col items-center sm:flex-row whitespace-pre"
+            >
               <motion.span
                 layout
                 className="flex whitespace-pre"
