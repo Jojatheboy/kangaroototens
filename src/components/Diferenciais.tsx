@@ -95,7 +95,7 @@ function Placeholder({ item }: { item: Diferencial }) {
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-10 text-center">
         <div
           className="inline-flex items-center justify-center rounded-2xl [&_svg]:w-9 [&_svg]:h-9"
-          style={{ width: 92, height: 92, background: "var(--c-orange)", color: "#0F0906" }}
+          style={{ width: 92, height: 92, background: "var(--c-orange)", color: "var(--c-ink)" }}
         >
           {item.icon}
         </div>
@@ -201,7 +201,7 @@ function ListItem({
             width: 34,
             height: 34,
             background: isActive ? "var(--c-orange)" : "rgba(255,255,255,0.06)",
-            color: isActive ? "#0F0906" : "var(--c-text-secondary)",
+            color: isActive ? "var(--c-ink)" : "var(--c-text-secondary)",
           }}
         >
           {item.icon}

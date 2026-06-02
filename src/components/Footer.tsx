@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_BASE } from "@/lib/site";
+import { UpscaleadMark } from "@/components/ui/UpscaleadMark";
 
 const equipamentos = [
   { l: "Totem Fotográfico", h: "#equipamentos" },
@@ -151,7 +152,13 @@ export function Footer() {
           >
             © 2026 Kangaroo Totens · Porto Alegre · RS
           </p>
-          <p
+
+          {/* Crédito da agência que desenvolveu o site */}
+          <a
+            href="https://upscaleadstudio.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 no-underline transition-colors hover:text-[color:var(--c-text-secondary)]"
             style={{
               fontFamily: "var(--font-geist-mono)",
               fontSize: 11,
@@ -159,8 +166,9 @@ export function Footer() {
               letterSpacing: "0.04em",
             }}
           >
-            Eternizando suas lembranças em um clique.
-          </p>
+            Desenvolvido pela Upscalead
+            <UpscaleadMark style={{ height: 13, width: "auto" }} />
+          </a>
         </div>
       </div>
 

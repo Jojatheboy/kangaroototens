@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import { whatsappUrl } from "@/lib/site";
+import { produtoMessage, whatsappUrl } from "@/lib/site";
 
 /**
  * Carrossel de produtos estilo Apple: cards dark com a imagem grande do
@@ -100,8 +100,7 @@ const BASE = produtos.length;
 // triplicado: o set do meio é o "ativo"; pulamos pra ele quando chega nas pontas
 const items = [...produtos, ...produtos, ...produtos];
 
-const waLink = (title: string) =>
-  whatsappUrl(`Olá Kangaroo, tenho interesse no ${title} para o meu evento.`);
+const waLink = (title: string) => whatsappUrl(produtoMessage(title));
 
 export function EquipamentosCarousel() {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -141,10 +140,9 @@ export function EquipamentosCarousel() {
     }
   }, []);
 
-  // começa no set do meio
+  // ao montar, posiciona o scroll no set do meio (active já inicia em 0)
   useEffect(() => {
     scrollToChild(BASE, false);
-    setActive(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

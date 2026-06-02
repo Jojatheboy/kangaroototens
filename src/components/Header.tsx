@@ -34,7 +34,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ShinyButton } from "@/components/ui/shiny-button";
-import { whatsappUrl } from "@/lib/site";
+import { whatsappUrl, WHATSAPP_MESSAGES } from "@/lib/site";
 
 interface MenuItem {
   title: string;
@@ -125,7 +125,7 @@ function HeaderCta({ fullWidth = false }: { fullWidth?: boolean }) {
   return (
     <div className={fullWidth ? "w-full [&_a]:w-full" : ""}>
       <ShinyButton
-        href={whatsappUrl()}
+        href={whatsappUrl(WHATSAPP_MESSAGES.header)}
         target="_blank"
         rel="noopener noreferrer"
         className={fullWidth ? "" : "shiny-cta-sm"}
@@ -289,7 +289,7 @@ export function Header() {
         style={{
           maxWidth: scrolled ? 1080 : 1280,
           borderRadius: scrolled ? 32 : 0,
-          background: scrolled ? "rgba(15, 9, 6, 0.72)" : "transparent",
+          background: scrolled ? "rgba(var(--c-ink-rgb), 0.72)" : "transparent",
           backdropFilter: scrolled ? "blur(14px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
           border: scrolled

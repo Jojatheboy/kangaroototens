@@ -14,6 +14,7 @@ import {
   INSTAGRAM_HANDLE,
   INSTAGRAM_URL,
   whatsappUrl,
+  WHATSAPP_MESSAGES,
 } from "@/lib/site";
 
 const tiposEvento = [
@@ -36,7 +37,7 @@ function buildWhatsAppLink(data: {
   mensagem: string;
 }) {
   const lines = [
-    `Olá Kangaroo! Quero um orçamento.`,
+    `Olá Kangaroo! Vim pelo site e quero um orçamento.`,
     ``,
     `Nome: ${data.nome}`,
     `WhatsApp: ${data.whatsapp}`,
@@ -170,7 +171,7 @@ export function CTA() {
 
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
               <ShinyButton
-                href={whatsappUrl()}
+                href={whatsappUrl(WHATSAPP_MESSAGES.ctaDireto)}
                 target="_blank"
                 rel="noopener noreferrer"
                 size="lg"

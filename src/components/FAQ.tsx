@@ -214,7 +214,7 @@ export function FAQ() {
                               transition:
                                 "transform 0.3s cubic-bezier(0.16,1,0.3,1)",
                               color: isOpen
-                                ? "#0F0906"
+                                ? "var(--c-ink)"
                                 : "var(--c-orange)",
                             }}
                           >

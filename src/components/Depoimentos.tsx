@@ -7,6 +7,7 @@ import {
   TestimonialsColumn,
   type TestimonialItem,
 } from "@/components/ui/testimonials-columns-1";
+import { eyebrowStyle, sectionTitleStyle } from "@/lib/section-styles";
 
 // tema claro aplicado quando a seção entra na tela (sobrescreve os tokens)
 const lightVars: CSSProperties = {
@@ -144,18 +145,9 @@ export function Depoimentos() {
           className="flex flex-col items-center justify-center mx-auto"
           style={{ maxWidth: 720 }}
         >
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 500,
-              fontSize: 13,
-              textTransform: "uppercase",
-              letterSpacing: "0.12em",
-              color: "var(--c-text-mute)",
-              marginBottom: 14,
-              transition: "color 0.7s ease",
-            }}
-          >
+          {/* eyebrow/título compartilhados; o transition acompanha a virada
+              de tema (escuro → claro) quando a seção entra na viewport */}
+          <p style={{ ...eyebrowStyle, transition: "color 0.7s ease" }}>
             Depoimentos
           </p>
 
@@ -163,17 +155,7 @@ export function Depoimentos() {
             as="h2"
             text="Quem escolheu, recomenda."
             className="text-center"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: "clamp(28px, 4.2vw, 44px)",
-              lineHeight: 1.08,
-              letterSpacing: "-0.03em",
-              color: "var(--c-text-primary)",
-              marginBottom: 14,
-              display: "block",
-              transition: "color 0.7s ease",
-            }}
+            style={{ ...sectionTitleStyle, transition: "color 0.7s ease" }}
           />
           <p
             className="text-center"

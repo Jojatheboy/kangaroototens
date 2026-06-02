@@ -48,7 +48,7 @@ export default function RootLayout({
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:rounded-md focus:px-4 focus:py-2 focus:outline-none"
           style={{
             background: "var(--c-orange)",
-            color: "#0F0906",
+            color: "var(--c-ink)",
             fontFamily: "var(--font-geist)",
             fontWeight: 600,
             fontSize: 14,

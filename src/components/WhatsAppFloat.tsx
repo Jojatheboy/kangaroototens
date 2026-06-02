@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { whatsappUrl } from "@/lib/site";
+import { whatsappUrl, WHATSAPP_MESSAGES } from "@/lib/site";
 
 export function WhatsAppFloat() {
   return (
@@ -64,7 +64,7 @@ export function WhatsAppFloat() {
 
       {/* Botão verde — sempre visível */}
       <motion.a
-        href={whatsappUrl()}
+        href={whatsappUrl(WHATSAPP_MESSAGES.flutuante)}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Falar no WhatsApp"

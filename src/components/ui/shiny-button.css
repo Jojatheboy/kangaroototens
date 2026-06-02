@@ -25,7 +25,7 @@
 .shiny-cta {
   --shiny-cta-bg: #FF5A2A;
   --shiny-cta-bg-subtle: rgba(255, 255, 255, 0.16);
-  --shiny-cta-fg: #0F0906;
+  --shiny-cta-fg: var(--c-ink);
   --shiny-cta-highlight: #FFE8D6;
   --shiny-cta-highlight-subtle: #FFFFFF;
   --animation: gradient-angle linear infinite;

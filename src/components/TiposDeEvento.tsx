@@ -14,7 +14,8 @@ import {
 
 import { Reveal } from "./Reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
-import { whatsappUrl } from "@/lib/site";
+import { whatsappUrl, WHATSAPP_MESSAGES } from "@/lib/site";
+import { eyebrowStyle } from "@/lib/section-styles";
 
 type Evento = {
   icon: LucideIcon;
@@ -292,21 +293,9 @@ export function TiposDeEvento() {
         <Reveal>
           <div className="flex items-end justify-between gap-6 flex-wrap">
             <div style={{ maxWidth: 640 }}>
-              <span
-                className="inline-flex items-center rounded-full mb-5"
-                style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  padding: "5px 14px",
-                  fontSize: 12,
-                  color: "var(--c-text-secondary)",
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 500,
-                  letterSpacing: "0.04em",
-                }}
-              >
-                Eventos
-              </span>
+              {/* eyebrow padrão do site (mesmo estilo de Equipamentos,
+                  Diferenciais, etc.) — alinhado à esquerda no header */}
+              <p style={eyebrowStyle}>Eventos</p>
               <TextReveal
                 as="h2"
                 text="Pra qualquer evento, do seu jeito."
@@ -335,7 +324,7 @@ export function TiposDeEvento() {
             </div>
 
             <a
-              href={whatsappUrl()}
+              href={whatsappUrl(WHATSAPP_MESSAGES.eventos)}
               target="_blank"
               rel="noopener noreferrer"
               className="no-underline whitespace-nowrap transition-colors hover:opacity-80"
@@ -418,7 +407,7 @@ export function TiposDeEvento() {
                         width: 44,
                         height: 44,
                         background: "var(--c-orange)",
-                        color: "#0F0906",
+                        color: "var(--c-ink)",
                       }}
                     >
                       <Icon size={20} strokeWidth={1.8} />

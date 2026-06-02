@@ -5,7 +5,7 @@ import { TextRotate } from "@/components/ui/text-rotate";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { ButtonSecondary } from "@/components/ui/button-secondary";
 import { HeroGallery } from "@/components/HeroGallery";
-import { whatsappUrl } from "@/lib/site";
+import { whatsappUrl, WHATSAPP_MESSAGES } from "@/lib/site";
 
 export function Hero() {
   return (
@@ -17,7 +17,7 @@ export function Hero() {
       {/* Base escura */}
       <div
         className="absolute inset-0 z-0 pointer-events-none"
-        style={{ background: "#0F0906" }}
+        style={{ background: "var(--c-ink)" }}
       />
 
       {/* Parede de imagens (parallax no scroll) — faixa inferior */}
@@ -30,7 +30,7 @@ export function Hero() {
         style={{
           height: "26%",
           background:
-            "linear-gradient(to bottom, rgba(15,9,6,0) 0%, rgba(15,9,6,0.6) 55%, #0F0906 100%)",
+            "linear-gradient(to bottom, rgba(var(--c-ink-rgb),0) 0%, rgba(var(--c-ink-rgb),0.6) 55%, var(--c-ink) 100%)",
         }}
       />
 
@@ -43,7 +43,7 @@ export function Hero() {
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
           className="inline-flex items-center gap-2 sm:gap-2.5 rounded-full no-underline mb-6 sm:mb-9 transition-colors max-w-[88vw]"
           style={{
-            background: "rgba(15, 9, 6, 0.55)",
+            background: "rgba(var(--c-ink-rgb), 0.55)",
             backdropFilter: "blur(10px)",
             WebkitBackdropFilter: "blur(10px)",
             border: "1px solid rgba(255, 255, 255, 0.08)",
@@ -54,7 +54,7 @@ export function Hero() {
             className="inline-flex items-center justify-center rounded-full font-bold shrink-0"
             style={{
               background: "var(--c-orange)",
-              color: "#0F0906",
+              color: "var(--c-ink)",
               padding: "3px 9px",
               fontSize: 9.5,
               letterSpacing: "0.06em",
@@ -144,7 +144,7 @@ export function Hero() {
           </div>
           <div className="order-1 sm:order-2">
             <ShinyButton
-              href={whatsappUrl()}
+              href={whatsappUrl(WHATSAPP_MESSAGES.hero)}
               target="_blank"
               rel="noopener noreferrer"
               size="default"
@@ -181,7 +181,7 @@ export function Hero() {
             width: 22,
             height: 34,
             border: "1px solid var(--c-line-strong)",
-            background: "rgba(15, 9, 6, 0.45)",
+            background: "rgba(var(--c-ink-rgb), 0.45)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
           }}

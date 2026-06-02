@@ -136,7 +136,7 @@ export function Loader() {
             transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="relative inline-flex items-center"
             style={{
-              background: "#0F0906",
+              background: "var(--c-ink)",
               border: "1px solid rgba(255, 255, 255, 0.08)",
               borderRadius: 999,
               padding: "6px 18px 6px 6px",

@@ -173,7 +173,7 @@ function MockCuradoria() {
                 width: 22,
                 height: 22,
                 background: "var(--c-orange)",
-                color: "#0F0906",
+                color: "var(--c-ink)",
               }}
             >
               <Check size={13} strokeWidth={3} />
@@ -255,7 +255,7 @@ function MockPersonalizacao() {
             height="8"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#0F0906"
+            style={{ stroke: "var(--c-ink)" }}
             strokeWidth="3"
           >
             <path d="M5 12h14M12 5l7 7-7 7" />
@@ -394,7 +394,7 @@ function MockEvento() {
             fontFamily: "var(--font-display)",
             fontWeight: 700,
             fontSize: 6,
-            color: "#0F0906",
+            color: "var(--c-ink)",
             letterSpacing: "0.06em",
           }}
         >
@@ -412,7 +412,7 @@ function MockEvento() {
             fontFamily: "var(--font-display)",
             fontWeight: 700,
             fontSize: 7,
-            color: "#0F0906",
+            color: "var(--c-ink)",
           }}
         >
           Relatório
@@ -467,7 +467,7 @@ function MockEvento() {
           fontFamily: "var(--font-display)",
           fontWeight: 700,
           fontSize: 7,
-          color: "#0F0906",
+          color: "var(--c-ink)",
           lineHeight: 1.2,
         }}
       >
