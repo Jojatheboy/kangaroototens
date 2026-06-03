@@ -356,6 +356,10 @@ const inputStyle: React.CSSProperties = {
   color: "var(--c-text-primary)",
   fontFamily: "var(--font-geist)",
   outline: "none",
+  width: "100%",
+  minWidth: 0,
+  maxWidth: "100%",
+  boxSizing: "border-box",
 };
 
 function Field({

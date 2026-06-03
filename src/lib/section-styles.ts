@@ -36,4 +36,5 @@ export const sectionLeadStyle: CSSProperties = {
   color: "var(--c-text-secondary)",
   maxWidth: "48ch",
   margin: "0 auto",
+  textWrap: "balance",
 };

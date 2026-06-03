@@ -35,7 +35,7 @@ export function TestimonialsColumn({
       >
         {[...new Array(2).fill(0)].map((_, index) => (
           <React.Fragment key={index}>
-            {testimonials.map(({ text, image, name, role }, i) => (
+            {testimonials.map(({ text, image, name }, i) => (
               <div
                 key={i}
                 className="p-7 sm:p-8 w-full"
@@ -81,17 +81,6 @@ export function TestimonialsColumn({
                       }}
                     >
                       {name}
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-geist)",
-                        fontSize: 12,
-                        color: "var(--c-text-mute)",
-                        lineHeight: 1.4,
-                        transition: "color 0.7s ease",
-                      }}
-                    >
-                      {role}
                     </span>
                   </div>
                 </div>

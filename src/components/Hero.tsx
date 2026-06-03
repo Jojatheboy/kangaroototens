@@ -34,7 +34,7 @@ export function Hero() {
         }}
       />
 
-      <div className="flex flex-col justify-center items-center w-[300px] sm:w-[440px] md:w-[640px] lg:w-[820px] max-w-[92vw] z-30 pointer-events-auto">
+      <div className="flex flex-col justify-center items-center w-[92vw] sm:w-[440px] md:w-[640px] lg:w-[820px] max-w-[92vw] z-30 pointer-events-auto">
         {/* Announcement pill */}
         <motion.a
           href="#equipamentos"
@@ -78,7 +78,7 @@ export function Hero() {
         </motion.a>
 
         <motion.h1
-          className="text-[44px] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-center w-full justify-center items-center flex-col flex whitespace-pre leading-[0.95]"
+          className="text-[36px] sm:text-[44px] md:text-6xl lg:text-7xl text-center w-full justify-center items-center flex-col flex leading-[0.95]"
           style={{
             fontFamily: "var(--font-display)",
             fontWeight: 700,
@@ -89,46 +89,34 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.2, ease: "easeOut", delay: 0.3 }}
         >
-          <span>Deixe seu </span>
+          {/* 2 linhas em todos os tamanhos: "Deixe seu evento" + a palavra que
+              gira. Antes virava 3 linhas no mobile (evento e a palavra
+              empilhados num container estreito de 300px). */}
+          <span className="whitespace-nowrap">Deixe seu evento</span>
           <LayoutGroup>
-            {/* mobile: a palavra que gira cai pra linha própria — palavras
-                longas ("compartilhável", "inesquecível") estouravam a largura
-                ao lado de "evento". sm+ volta a ficar inline, onde já cabe. */}
-            <motion.span
-              layout
-              className="flex flex-col items-center sm:flex-row whitespace-pre"
-            >
-              <motion.span
-                layout
-                className="flex whitespace-pre"
-                transition={{ type: "spring", damping: 30, stiffness: 400 }}
-              >
-                evento{" "}
-              </motion.span>
-              <TextRotate
-                texts={[
-                  "vivo",
-                  "viral",
-                  "marcante",
-                  "memorável",
-                  "inesquecível",
-                  "compartilhável",
-                  "épico",
-                  "lendário",
-                ]}
-                mainClassName="overflow-hidden pr-3 text-[color:var(--c-orange)] py-0 rounded-xl"
-                staggerDuration={0.03}
-                staggerFrom="last"
-                rotationInterval={3000}
-                transition={{ type: "spring", damping: 30, stiffness: 400 }}
-              />
-            </motion.span>
+            <TextRotate
+              texts={[
+                "vivo",
+                "viral",
+                "marcante",
+                "memorável",
+                "inesquecível",
+                "compartilhável",
+                "épico",
+                "lendário",
+              ]}
+              mainClassName="overflow-hidden px-1 text-[color:var(--c-orange)] py-0 rounded-xl justify-center"
+              staggerDuration={0.03}
+              staggerFrom="last"
+              rotationInterval={3000}
+              transition={{ type: "spring", damping: 30, stiffness: 400 }}
+            />
           </LayoutGroup>
         </motion.h1>
 
         <motion.p
           className="text-[13.5px] sm:text-base md:text-lg text-center mt-4 sm:mt-6 md:mt-7 max-w-[44ch] sm:max-w-[52ch] px-4 sm:px-0"
-          style={{ color: "var(--c-text-secondary)", lineHeight: 1.5 }}
+          style={{ color: "var(--c-text-secondary)", lineHeight: 1.5, textWrap: "balance" }}
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.2, ease: "easeOut", delay: 0.5 }}
@@ -138,13 +126,17 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          className="flex flex-col sm:flex-row sm:flex-wrap justify-center items-center gap-3 mt-7 sm:mt-10 md:mt-12 z-20"
+          className="flex flex-row flex-wrap justify-center items-center gap-2.5 sm:gap-3 mt-7 sm:mt-10 md:mt-12 z-20"
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.4, ease: "easeOut", delay: 0.7 }}
         >
           <div className="order-2 sm:order-1">
-            <ButtonSecondary href="#equipamentos" size="default">
+            <ButtonSecondary
+              href="#equipamentos"
+              size="default"
+              className="!px-4 !py-2.5 !text-[13px] sm:!px-[26px] sm:!py-3.5 sm:!text-[15px]"
+            >
               Ver equipamentos
             </ButtonSecondary>
           </div>
@@ -154,6 +146,7 @@ export function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               size="default"
+              className="!px-4 !py-2.5 !text-[13px] sm:!px-7 sm:!py-3.5 sm:!text-[15px]"
             >
               Solicitar orçamento
             </ShinyButton>

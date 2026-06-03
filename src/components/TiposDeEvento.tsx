@@ -449,13 +449,13 @@ export function TiposDeEvento() {
         }}
       >
         <div className="relative flex items-center justify-center">
-          <div className="flex items-center gap-6 flex-wrap justify-center">
+          <div className="flex items-center gap-6 flex-nowrap overflow-x-auto justify-start sm:justify-center w-full -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {eventos.map((ev, i) => (
               <button
                 key={ev.title}
                 type="button"
                 onClick={() => goToTab(i)}
-                className="relative pb-1.5 transition-colors"
+                className="relative pb-1.5 shrink-0 whitespace-nowrap transition-colors"
                 style={{
                   fontFamily: "var(--font-display)",
                   fontWeight: 600,

@@ -282,7 +282,7 @@ export function RelatorioMock() {
         }}
       />
 
-      <div className="absolute inset-0 flex flex-col justify-between p-7 sm:p-10">
+      <div className="absolute inset-0 flex flex-col justify-between gap-4 p-5 sm:p-10">
         {/* header */}
         <div className="flex items-center justify-between">
           <span
@@ -315,45 +315,51 @@ export function RelatorioMock() {
         </div>
 
         {/* KPIs */}
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
           {KPIS.map((s) => (
             <div
               key={s.k}
+              className="min-w-0 p-2.5 sm:p-[15px]"
               style={{
                 background: "rgba(255,255,255,0.035)",
                 border: "1px solid rgba(255,255,255,0.07)",
                 borderRadius: 14,
-                padding: "13px 15px",
               }}
             >
-              <div className="flex items-baseline gap-2">
-                <span
-                  className="tabular-nums"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 700,
-                    fontSize: "clamp(19px, 2.3vw, 27px)",
-                    letterSpacing: "-0.02em",
-                    color: "var(--c-text-primary)",
-                    lineHeight: 1,
-                  }}
-                >
-                  {s.v}
-                </span>
-                <span
-                  className="inline-flex items-center gap-0.5 [&_svg]:w-3 [&_svg]:h-3"
-                  style={{
-                    color: "var(--c-orange)",
-                    fontFamily: "var(--font-geist-mono)",
-                    fontSize: 10.5,
-                    fontWeight: 600,
-                  }}
-                >
-                  <TrendingUp />
-                  {s.up}
-                </span>
-              </div>
-              <div style={{ fontSize: 11.5, color: "var(--c-text-mute)", marginTop: 7 }}>
+              <span
+                className="tabular-nums block"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: "clamp(18px, 5vw, 27px)",
+                  letterSpacing: "-0.02em",
+                  color: "var(--c-text-primary)",
+                  lineHeight: 1,
+                }}
+              >
+                {s.v}
+              </span>
+              <span
+                className="inline-flex items-center gap-0.5 mt-1.5 [&_svg]:w-3 [&_svg]:h-3"
+                style={{
+                  color: "var(--c-orange)",
+                  fontFamily: "var(--font-geist-mono)",
+                  fontSize: 10.5,
+                  fontWeight: 600,
+                }}
+              >
+                <TrendingUp />
+                {s.up}
+              </span>
+              <div
+                style={{
+                  fontSize: "clamp(10px, 2.7vw, 11.5px)",
+                  lineHeight: 1.25,
+                  color: "var(--c-text-mute)",
+                  marginTop: 8,
+                  overflowWrap: "anywhere",
+                }}
+              >
                 {s.k}
               </div>
             </div>

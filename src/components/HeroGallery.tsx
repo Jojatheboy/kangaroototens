@@ -145,7 +145,7 @@ export function HeroGallery() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-x-0 bottom-0 top-[46%] sm:top-[50%] z-0 overflow-hidden pointer-events-none"
+      className="absolute inset-x-0 bottom-0 top-[40%] sm:top-[48%] z-0 overflow-hidden pointer-events-none"
     >
       <div className="flex gap-2 w-full">
         {columns.map((items, i) => (

@@ -573,12 +573,11 @@ export function ComoFunciona() {
             return (
               <Reveal key={step.num} delay={i * 0.08}>
                 <article
-                  className="group relative h-full overflow-hidden flex flex-col transition-all duration-300 will-change-transform hover:-translate-y-1"
+                  className="group relative h-full overflow-hidden flex flex-col transition-all duration-300 will-change-transform hover:-translate-y-1 min-h-[360px] sm:min-h-[460px]"
                   style={{
                     background: "var(--c-surface)",
                     border: "1px solid var(--c-line)",
                     borderRadius: 16,
-                    minHeight: 460,
                   }}
                 >
                   {/* Glow no hover */}
@@ -611,10 +610,8 @@ export function ComoFunciona() {
 
                   {/* Mockup area */}
                   <div
-                    className="relative flex items-center justify-center px-6 py-10 sm:py-12 overflow-hidden"
+                    className="relative flex items-center justify-center px-6 py-8 sm:py-12 overflow-hidden h-[270px] sm:h-[380px] shrink-0"
                     style={{
-                      height: 380,
-                      flexShrink: 0,
                       borderBottom: "1px solid var(--c-line)",
                     }}
                   >

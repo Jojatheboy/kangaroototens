@@ -105,11 +105,11 @@ export function Footer() {
               >
                 <AccordionTrigger
                   variant="ghost"
-                  className="hover:no-underline py-3.5 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--c-text-mute)]"
+                  className="!px-0 hover:no-underline py-3.5 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--c-text-mute)]"
                 >
                   {s.title}
                 </AccordionTrigger>
-                <AccordionContent variant="ghost" className="pt-0">
+                <AccordionContent variant="ghost" className="!px-0 pt-0">
                   <ul className="flex flex-col gap-2 pb-3" style={{ fontSize: 13.5 }}>
                     {s.items.map((a) => {
                       const external = (a as { external?: boolean }).external;
