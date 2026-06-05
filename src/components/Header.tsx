@@ -323,7 +323,7 @@ export function Header() {
                   aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
                   aria-expanded={mobileOpen}
                   onClick={() => setMobileOpen((v) => !v)}
-                  className="relative z-[120] inline-flex items-center justify-center rounded-md transition-colors hover:bg-white/5"
+                  className="relative z-[120] inline-flex items-center justify-center rounded-full transition-colors hover:bg-white/5"
                   style={{
                     width: 40,
                     height: 40,

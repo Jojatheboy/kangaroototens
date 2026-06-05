@@ -133,11 +133,11 @@ export function CTA() {
           />
 
           <div
-            className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_460px] gap-10 lg:gap-14 items-start"
+            className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_460px] lg:grid-rows-[auto_1fr] gap-10 lg:gap-14 items-start"
             style={{ maxWidth: 1280, margin: "0 auto" }}
           >
-          {/* Coluna texto */}
-          <div className="text-center lg:text-left">
+          {/* Coluna texto (topo) */}
+          <div className="text-center lg:text-left lg:col-start-1 lg:row-start-1">
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -180,62 +180,6 @@ export function CTA() {
               </ShinyButton>
             </div>
 
-            <div
-              className="mt-10 pt-8 grid grid-cols-2 gap-6 text-center lg:text-left"
-              style={{ borderTop: "1px solid var(--c-line)" }}
-            >
-              <div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-geist-mono)",
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    letterSpacing: "1px",
-                    color: "var(--c-text-mute)",
-                    marginBottom: 6,
-                  }}
-                >
-                  Localização
-                </p>
-                <p
-                  style={{
-                    fontSize: 14,
-                    color: "var(--c-text-secondary)",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Porto Alegre · RS
-                  <br />
-                  Atendemos POA e região
-                </p>
-              </div>
-              <div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-geist-mono)",
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    letterSpacing: "1px",
-                    color: "var(--c-text-mute)",
-                    marginBottom: 6,
-                  }}
-                >
-                  Instagram
-                </p>
-                <a
-                  href={INSTAGRAM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="no-underline"
-                  style={{
-                    fontSize: 14,
-                    color: "var(--c-text-primary)",
-                  }}
-                >
-                  {INSTAGRAM_HANDLE}
-                </a>
-              </div>
-            </div>
           </div>
 
           {/* Form */}
@@ -245,7 +189,7 @@ export function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="relative px-4 sm:px-7 py-7 sm:py-8"
+            className="relative px-4 sm:px-7 py-7 sm:py-8 lg:col-start-2 lg:row-start-1 lg:row-span-2"
             style={{
               background: "var(--c-surface)",
               border: "1px solid var(--c-line-strong)",
@@ -253,6 +197,7 @@ export function CTA() {
             }}
           >
             <p
+              className="text-center lg:text-left"
               style={{
                 fontFamily: "var(--font-display)",
                 fontWeight: 700,
@@ -264,6 +209,7 @@ export function CTA() {
               Quero um orçamento
             </p>
             <p
+              className="text-center lg:text-left"
               style={{
                 fontSize: 13.5,
                 color: "var(--c-text-mute)",
@@ -303,7 +249,7 @@ export function CTA() {
                 value={form.tipo}
                 onChange={(e) => update("tipo", e.target.value)}
                 className="w-full"
-                style={inputStyle}
+                style={selectStyle}
               >
                 {tiposEvento.map((t) => (
                   <option key={t} value={t}>
@@ -340,6 +286,46 @@ export function CTA() {
               </ShinyButton>
             </div>
           </motion.form>
+
+          {/* Instagram — embaixo (mobile) / coluna esquerda abaixo do texto (desktop) */}
+          <div
+            className="pt-8 flex justify-center lg:justify-start lg:col-start-1 lg:row-start-2"
+            style={{ borderTop: "1px solid var(--c-line)" }}
+          >
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 no-underline transition-opacity hover:opacity-80"
+            >
+              <svg
+                aria-hidden="true"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="shrink-0"
+                style={{ color: "var(--c-text-secondary)" }}
+              >
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+              </svg>
+              <span
+                style={{
+                  fontSize: 15,
+                  color: "var(--c-text-primary)",
+                  fontFamily: "var(--font-geist)",
+                }}
+              >
+                {INSTAGRAM_HANDLE}
+              </span>
+            </a>
+          </div>
           </div>
         </div>
       </div>
@@ -360,6 +346,26 @@ const inputStyle: React.CSSProperties = {
   minWidth: 0,
   maxWidth: "100%",
   boxSizing: "border-box",
+  // renderiza os controles nativos (placeholder do type=date, seta do
+  // select) em tons claros sobre o fundo escuro.
+  colorScheme: "dark",
+  // CRÍTICO p/ iOS Safari: sem resetar o appearance, o iPhone ignora
+  // width:100% no <input type=date> e no <select> e usa a largura
+  // intrínseca nativa — que vaza pra fora do card. No Chrome/Android não
+  // acontece, por isso o bug só aparecia no iPhone.
+  WebkitAppearance: "none",
+  appearance: "none",
+};
+
+// O select perde a seta nativa ao zerar o appearance — devolvemos uma seta
+// própria (chevron) como background, mantendo o controle dentro do card.
+const selectStyle: React.CSSProperties = {
+  ...inputStyle,
+  backgroundImage:
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\")",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 14px center",
+  paddingRight: 40,
 };
 
 function Field({

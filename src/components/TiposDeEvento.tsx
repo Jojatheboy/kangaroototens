@@ -35,8 +35,7 @@ const eventos: Evento[] = [
     subtitle: "Casamentos · Aniversários · Formaturas",
     quote:
       "Casamentos, aniversários, formaturas e aniversários de 15. Cada momento eternizado com a tecnologia e a operação da Kangaroo.",
-    video: "/videos/sociais.mp4",
-    poster: "/videos/sociais-poster.webp",
+    image: "/images/eventos/sociais-1.jpg",
   },
   {
     icon: Briefcase,

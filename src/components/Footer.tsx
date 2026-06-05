@@ -78,6 +78,31 @@ export function Footer() {
               Tecnologia interativa para eventos em Porto Alegre e região. Cada
               clique vira lembrança.
             </p>
+
+            {/* Localização */}
+            <div className="mt-5">
+              <p
+                style={{
+                  fontFamily: "var(--font-geist-mono)",
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  color: "var(--c-text-mute)",
+                  marginBottom: 6,
+                }}
+              >
+                Localização
+              </p>
+              <p
+                style={{
+                  fontSize: 13,
+                  lineHeight: 1.6,
+                  color: "var(--c-text-secondary)",
+                }}
+              >
+                Porto Alegre · RS · Atendemos POA e região
+              </p>
+            </div>
           </div>
 
           {/* DESKTOP: colunas */}
