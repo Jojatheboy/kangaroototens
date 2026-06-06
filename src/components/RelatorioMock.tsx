@@ -1,288 +1,296 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp } from "lucide-react";
+import {
+  Camera,
+  Heart,
+  Share2,
+  QrCode,
+  Image as ImageIcon,
+  Sparkles,
+  Smartphone,
+  Download,
+} from "lucide-react";
 
 /**
- * Mock de "Relatório pós-evento" — dashboard dark na identidade da Kangaroo.
- * Gráfico de linha profissional: curva suave, eixo Y, grid sutil, tooltip no
- * hover. Largura medida (sem distorção). SVG puro, sem libs de chart.
+ * Relatório pós-evento — V2.
+ * Anéis concêntricos (top 3 equipamentos, total no centro) + barra segmentada
+ * com a divisão completa de fotos por equipamento e legenda com %.
+ * SVG/CSS puro, sem libs de chart. Cores nos tokens da marca.
  */
 
-// série densa e determinística (sem random → sem mismatch de hidratação)
-const N = 25;
-const MAX_DOMAIN = 2000;
-const SERIE = Array.from({ length: N }, (_, i) => {
-  const t = i / (N - 1);
-  const base = 1842 * Math.pow(t, 1.55);
-  const wiggle = Math.sin(i * 1.25) * 16 + Math.sin(i * 0.6) * 10;
-  return Math.max(0, Math.round(base + (i === 0 ? 0 : wiggle)));
-});
-const Y_TICKS = [0, 500, 1000, 1500, 2000];
-const X_TICKS = [
-  { i: 0, l: "18h" },
-  { i: 6, l: "20h" },
-  { i: 12, l: "22h" },
-  { i: 18, l: "00h" },
-  { i: 24, l: "02h" },
+/* --------------------------------------------------------------- dados */
+
+const SEGMENTS = [
+  { l: "Totem Fotográfico", v: 720, color: "#FF5A2A" },
+  { l: "Plataforma 360°", v: 540, color: "#F5A623" },
+  { l: "Cabine de Prêmios", v: 380, color: "#4FB4F5" },
+  { l: "Audiobook", v: 150, color: "#9A6BE0" },
+  { l: "Outros", v: 52, color: "#7A7067", striped: true },
 ];
+const TOTAL = SEGMENTS.reduce((a, s) => a + s.v, 0); // 1842
 
-const KPIS = [
-  { k: "Fotos no evento", v: "1.842", up: "+38%" },
-  { k: "Leads captados", v: "318", up: "+24%" },
-  { k: "Compartilhamentos", v: "4,7 mil", up: "+61%" },
-];
+const STRIPES =
+  "repeating-linear-gradient(45deg, rgba(255,255,255,0.22) 0 3px, transparent 3px 7px)";
 
-const BARRAS = [
-  { l: "Totem Fotográfico", v: 720 },
-  { l: "Plataforma 360°", v: 540 },
-  { l: "Cabine de Prêmios", v: 380 },
-  { l: "Audiobook", v: 202 },
-];
+/* --------------------------------------------------------------- anéis */
 
-const H = 210;
-const PT = 14; // padding top
-const PB = 24; // padding bottom (labels x)
-const PL = 40; // padding left (labels y)
-const PR = 14; // padding right
+const C = 120; // centro do viewBox 240×240
+const RADII = [104, 82, 60]; // outer → inner (mais espaçados)
+const STROKE = 9;
 
-function fmt(v: number) {
-  return v.toLocaleString("pt-BR");
-}
-
-function fmtTime(i: number) {
-  const min = 18 * 60 + (i / (N - 1)) * 8 * 60;
-  const h = Math.floor(min / 60) % 24;
-  const m = Math.round((min % 60) / 5) * 5;
-  const mm = m === 60 ? 0 : m;
-  const hh = m === 60 ? (h + 1) % 24 : h;
-  return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
-}
-
-// curva suave (Catmull-Rom → bézier)
-function smooth(pts: { x: number; y: number }[]) {
-  if (pts.length < 2) return "";
-  let d = `M${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[i - 1] ?? pts[i];
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const p3 = pts[i + 2] ?? p2;
-    const c1x = p1.x + (p2.x - p0.x) / 6;
-    const c1y = p1.y + (p2.y - p0.y) / 6;
-    const c2x = p2.x - (p3.x - p1.x) / 6;
-    const c2y = p2.y - (p3.y - p1.y) / 6;
-    d += ` C${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
-  }
-  return d;
-}
-
-function LineChart() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const [w, setW] = useState(560);
-  const [hover, setHover] = useState<number | null>(null);
-
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const update = () => setW(el.clientWidth);
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  const yOf = (v: number) => PT + (1 - v / MAX_DOMAIN) * (H - PT - PB);
-  const xOf = (i: number) => PL + (i / (N - 1)) * (w - PL - PR);
-
-  const { line, area } = useMemo(() => {
-    const pts = SERIE.map((v, i) => ({ x: xOf(i), y: yOf(v) }));
-    const line = smooth(pts);
-    const area = `${line} L${pts[N - 1].x.toFixed(1)} ${H - PB} L${pts[0].x.toFixed(1)} ${H - PB} Z`;
-    return { line, area };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [w]);
-
-  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const relX = e.clientX - rect.left;
-    const i = Math.round(((relX - PL) / (w - PL - PR)) * (N - 1));
-    setHover(Math.max(0, Math.min(N - 1, i)));
-  };
-
-  const hx = hover != null ? xOf(hover) : 0;
-  const hy = hover != null ? yOf(SERIE[hover]) : 0;
-
+function Rings() {
+  const top = SEGMENTS.slice(0, 3);
+  const MAX = Math.max(...top.map((t) => t.v));
   return (
-    <div
-      ref={wrapRef}
-      className="relative w-full"
-      style={{ height: H }}
-      onPointerMove={onMove}
-      onPointerLeave={() => setHover(null)}
-    >
-      <svg width="100%" height={H} viewBox={`0 0 ${w} ${H}`} className="block">
-        <defs>
-          <linearGradient id="rel-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(255,90,42,0.18)" />
-            <stop offset="100%" stopColor="rgba(255,90,42,0)" />
-          </linearGradient>
-        </defs>
+    <div className="relative w-full mx-auto max-w-[250px] lg:max-w-[470px]">
+      <svg viewBox="0 0 240 240" width="100%" className="block">
 
-        {/* grid + labels Y */}
-        {Y_TICKS.map((t) => (
-          <g key={t}>
-            <line
-              x1={PL}
-              x2={w - PR}
-              y1={yOf(t)}
-              y2={yOf(t)}
-              stroke="rgba(255,255,255,0.055)"
-              strokeWidth={1}
-            />
-            <text
-              x={PL - 8}
-              y={yOf(t) + 3}
-              textAnchor="end"
-              style={{
-                fontFamily: "var(--font-geist-mono)",
-                fontSize: 9.5,
-                fill: "var(--c-text-mute)",
-              }}
-            >
-              {t >= 1000 ? `${t / 1000}k` : t}
-            </text>
-          </g>
-        ))}
-
-        {/* labels X */}
-        {X_TICKS.map((t) => (
-          <text
-            key={t.l}
-            x={xOf(t.i)}
-            y={H - 6}
-            textAnchor="middle"
-            style={{
-              fontFamily: "var(--font-geist-mono)",
-              fontSize: 9.5,
-              fill: "var(--c-text-mute)",
-            }}
-          >
-            {t.l}
-          </text>
-        ))}
-
-        <motion.path
-          d={area}
-          fill="url(#rel-fill)"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.5 }}
-        />
-        <motion.path
-          d={line}
-          fill="none"
-          stroke="var(--c-orange)"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
-        />
-
-        {hover != null && (
-          <g>
-            <line
-              x1={hx}
-              x2={hx}
-              y1={PT}
-              y2={H - PB}
-              stroke="rgba(255,255,255,0.2)"
-              strokeWidth={1}
-            />
-            <circle cx={hx} cy={hy} r={4} fill="var(--c-orange)" stroke="#0A0908" strokeWidth={2} />
-          </g>
-        )}
+        {top.map((s, i) => {
+          const r = RADII[i];
+          const circ = 2 * Math.PI * r;
+          // preenche em relação ao líder (Totem) p/ os anéis ficarem cheios
+          const pct = (s.v / MAX) * 0.9;
+          return (
+            <g key={s.l}>
+              <circle
+                cx={C}
+                cy={C}
+                r={r}
+                fill="none"
+                stroke="rgba(255,255,255,0.08)"
+                strokeWidth={STROKE}
+              />
+              <motion.circle
+                cx={C}
+                cy={C}
+                r={r}
+                fill="none"
+                stroke={s.color}
+                strokeWidth={STROKE}
+                strokeLinecap="round"
+                strokeDasharray={circ}
+                transform={`rotate(-90 ${C} ${C})`}
+                initial={{ strokeDashoffset: circ }}
+                whileInView={{ strokeDashoffset: circ * (1 - pct) }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 1.1,
+                  delay: 0.15 + i * 0.12,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+              />
+            </g>
+          );
+        })}
       </svg>
 
-      {/* tooltip */}
-      {hover != null && (
-        <div
-          className="pointer-events-none absolute z-10"
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span
+          className="tabular-nums"
           style={{
-            left: hx,
-            top: hy,
-            transform: `translate(${hx > w * 0.7 ? "calc(-100% - 12px)" : "12px"}, -50%)`,
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "clamp(30px, 9vw, 44px)",
+            letterSpacing: "-0.02em",
+            color: "var(--c-text-primary)",
+            lineHeight: 1,
           }}
         >
-          <div
-            style={{
-              background: "rgba(20,18,17,0.92)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 9,
-              padding: "7px 10px",
-              backdropFilter: "blur(6px)",
-              WebkitBackdropFilter: "blur(6px)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-geist-mono)",
-                fontSize: 10,
-                color: "var(--c-text-mute)",
-                marginBottom: 2,
-              }}
-            >
-              {fmtTime(hover)}
-            </div>
-            <div
-              className="tabular-nums"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 700,
-                fontSize: 14,
-                color: "var(--c-text-primary)",
-              }}
-            >
-              {fmt(SERIE[hover])} fotos
-            </div>
-          </div>
-        </div>
-      )}
+          {TOTAL.toLocaleString("pt-BR")}
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--font-geist-mono)",
+            fontSize: 10.5,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: "var(--c-text-mute)",
+            marginTop: 5,
+          }}
+        >
+          fotos
+        </span>
+      </div>
     </div>
   );
 }
 
-export function RelatorioMock() {
-  const maxBar = Math.max(...BARRAS.map((b) => b.v));
+/* --------------------------------------------------------------- barra */
 
+function StackedBar() {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between" style={{ marginBottom: 11 }}>
+        <span
+          style={{
+            fontFamily: "var(--font-geist-mono)",
+            fontSize: 10.5,
+            textTransform: "uppercase",
+            letterSpacing: "0.14em",
+            color: "var(--c-text-mute)",
+          }}
+        >
+          Fotos por equipamento
+        </span>
+        <span
+          className="tabular-nums"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: 16,
+            color: "var(--c-text-primary)",
+          }}
+        >
+          {TOTAL.toLocaleString("pt-BR")}
+        </span>
+      </div>
+
+      {/* barra segmentada */}
+      <div className="flex w-full" style={{ height: 12, gap: 3 }}>
+        {SEGMENTS.map((s, i) => (
+          <motion.div
+            key={s.l}
+            style={{
+              background: s.color,
+              backgroundImage: s.striped ? STRIPES : undefined,
+              borderRadius: 3,
+              height: "100%",
+            }}
+            initial={{ width: 0, opacity: 0 }}
+            whileInView={{ width: `${(s.v / TOTAL) * 100}%`, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+          />
+        ))}
+      </div>
+
+      {/* legenda */}
+      <div className="flex flex-col" style={{ marginTop: 13, gap: 8 }}>
+        {SEGMENTS.map((s) => (
+          <div key={s.l} className="flex items-center gap-2.5">
+            <span
+              className="shrink-0"
+              style={{
+                width: 11,
+                height: 11,
+                borderRadius: 3,
+                background: s.color,
+                backgroundImage: s.striped ? STRIPES : undefined,
+              }}
+            />
+            <span style={{ fontSize: 13, color: "var(--c-text-secondary)" }}>
+              {s.l}
+            </span>
+            <span
+              className="flex-1"
+              style={{
+                borderBottom: "1px dotted rgba(255,255,255,0.16)",
+                transform: "translateY(-3px)",
+              }}
+            />
+            <span
+              className="tabular-nums shrink-0 text-right"
+              style={{
+                width: 40,
+                fontFamily: "var(--font-geist-mono)",
+                fontSize: 12.5,
+                color: "var(--c-text-primary)",
+              }}
+            >
+              {Math.round((s.v / TOTAL) * 100)}%
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------ ícones flutuantes (desktop) */
+
+const FLOATERS = [
+  { Icon: Camera, pos: { left: "4%", top: "12%" }, size: 56, tint: "#FF5A2A", dur: 4.4, d: 0.0 },
+  { Icon: ImageIcon, pos: { left: "22%", top: "4%" }, size: 42, tint: "#4FB4F5", dur: 4.7, d: 0.3 },
+  { Icon: Sparkles, pos: { left: "12%", top: "58%" }, size: 46, tint: "#F5A623", dur: 5.0, d: 0.5 },
+  { Icon: QrCode, pos: { left: "3%", top: "84%" }, size: 48, tint: "#4FB4F5", dur: 4.6, d: 0.8 },
+  { Icon: Heart, pos: { right: "5%", top: "12%" }, size: 50, tint: "#9A6BE0", dur: 4.8, d: 0.2 },
+  { Icon: Share2, pos: { right: "12%", top: "56%" }, size: 52, tint: "#FF5A2A", dur: 5.2, d: 0.6 },
+  { Icon: Smartphone, pos: { right: "4%", top: "84%" }, size: 44, tint: "#F5A623", dur: 4.3, d: 1.0 },
+  { Icon: Download, pos: { right: "23%", top: "90%" }, size: 40, tint: "#9A6BE0", dur: 5.1, d: 0.9 },
+];
+
+function FloatingIcons() {
+  return (
+    <div
+      className="hidden lg:block absolute inset-0 pointer-events-none"
+      aria-hidden="true"
+    >
+      {FLOATERS.map((f, i) => {
+        const Icon = f.Icon;
+        return (
+          <motion.div
+            key={i}
+            className="absolute"
+            style={f.pos}
+            initial={{ opacity: 0, scale: 0.6 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.25 + f.d, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <motion.div
+              className="flex items-center justify-center"
+              style={{
+                width: f.size,
+                height: f.size,
+                borderRadius: f.size * 0.28,
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.09)",
+                backdropFilter: "blur(4px)",
+                WebkitBackdropFilter: "blur(4px)",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+              }}
+              animate={{ y: [0, -10, 0] }}
+              transition={{
+                duration: f.dur,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: f.d,
+              }}
+            >
+              <Icon size={f.size * 0.42} strokeWidth={1.7} style={{ color: f.tint }} />
+            </motion.div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------- mock */
+
+export function RelatorioMock() {
   return (
     <div className="absolute inset-0 overflow-hidden">
+      {/* fundo */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(95% 65% at 60% 18%, rgba(255,90,42,0.10) 0%, rgba(10,9,8,0.55) 50%, #0A0908 100%)",
+            "radial-gradient(110% 70% at 50% 6%, rgba(255,90,42,0.12) 0%, rgba(10,9,8,0.6) 48%, #0A0908 100%)",
         }}
       />
       <div
         className="absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(255,255,255,0.05) 0.75px, transparent 0.75px)",
-          backgroundSize: "6px 6px",
-          opacity: 0.5,
+            "radial-gradient(circle, rgba(255,255,255,0.045) 0.75px, transparent 0.75px)",
+          backgroundSize: "7px 7px",
+          opacity: 0.45,
         }}
       />
 
-      <div className="absolute inset-0 flex flex-col justify-between gap-4 p-5 sm:p-10">
+      <div className="absolute inset-0 flex flex-col gap-5 p-5 sm:p-8">
         {/* header */}
         <div className="flex items-center justify-between">
           <span
@@ -296,7 +304,15 @@ export function RelatorioMock() {
           >
             Relatório do evento
           </span>
-          <span className="flex items-center gap-1.5">
+          <span
+            className="inline-flex items-center gap-2"
+            style={{
+              padding: "5px 11px 5px 9px",
+              borderRadius: 999,
+              background: "rgba(255,90,42,0.08)",
+              border: "1px solid rgba(255,90,42,0.22)",
+            }}
+          >
             <span
               className="inline-block rounded-full"
               style={{ width: 6, height: 6, background: "var(--c-orange)" }}
@@ -304,137 +320,26 @@ export function RelatorioMock() {
             <span
               style={{
                 fontFamily: "var(--font-geist-mono)",
-                fontSize: 10.5,
-                letterSpacing: "0.1em",
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
                 color: "var(--c-text-secondary)",
               }}
             >
-              AO VIVO
+              Kangaroo
             </span>
           </span>
         </div>
 
-        {/* KPIs */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
-          {KPIS.map((s) => (
-            <div
-              key={s.k}
-              className="min-w-0 p-2.5 sm:p-[15px]"
-              style={{
-                background: "rgba(255,255,255,0.035)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                borderRadius: 14,
-              }}
-            >
-              <span
-                className="tabular-nums block"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 700,
-                  fontSize: "clamp(18px, 5vw, 27px)",
-                  letterSpacing: "-0.02em",
-                  color: "var(--c-text-primary)",
-                  lineHeight: 1,
-                }}
-              >
-                {s.v}
-              </span>
-              <span
-                className="inline-flex items-center gap-0.5 mt-1.5 [&_svg]:w-3 [&_svg]:h-3"
-                style={{
-                  color: "var(--c-orange)",
-                  fontFamily: "var(--font-geist-mono)",
-                  fontSize: 10.5,
-                  fontWeight: 600,
-                }}
-              >
-                <TrendingUp />
-                {s.up}
-              </span>
-              <div
-                style={{
-                  fontSize: "clamp(10px, 2.7vw, 11.5px)",
-                  lineHeight: 1.25,
-                  color: "var(--c-text-mute)",
-                  marginTop: 8,
-                  overflowWrap: "anywhere",
-                }}
-              >
-                {s.k}
-              </div>
-            </div>
-          ))}
+        {/* anel + ícones flutuando ao redor (desktop) */}
+        <div className="relative flex-1 flex items-center justify-center min-h-0">
+          <FloatingIcons />
+          <Rings />
         </div>
 
-        {/* gráfico */}
-        <div>
-          <p
-            style={{
-              fontFamily: "var(--font-geist-mono)",
-              fontSize: 10.5,
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              color: "var(--c-text-mute)",
-              marginBottom: 6,
-            }}
-          >
-            Fotos ao longo do evento
-          </p>
-          <LineChart />
-        </div>
-
-        {/* barras por equipamento */}
-        <div>
-          <p
-            style={{
-              fontFamily: "var(--font-geist-mono)",
-              fontSize: 10.5,
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              color: "var(--c-text-mute)",
-              marginBottom: 12,
-            }}
-          >
-            Fotos por equipamento
-          </p>
-          <div className="flex flex-col gap-2.5">
-            {BARRAS.map((b, i) => (
-              <div key={b.l} className="flex items-center gap-3">
-                <span
-                  className="shrink-0"
-                  style={{ width: 132, fontSize: 12.5, color: "var(--c-text-secondary)" }}
-                >
-                  {b.l}
-                </span>
-                <div
-                  className="relative flex-1 overflow-hidden rounded-full"
-                  style={{ height: 7, background: "rgba(255,255,255,0.06)" }}
-                >
-                  <motion.div
-                    className="absolute inset-y-0 left-0 rounded-full"
-                    style={{ background: "var(--c-orange)" }}
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${(b.v / maxBar) * 100}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.9, delay: 0.1 * i, ease: [0.16, 1, 0.3, 1] }}
-                  />
-                </div>
-                <span
-                  className="shrink-0 tabular-nums"
-                  style={{
-                    width: 42,
-                    textAlign: "right",
-                    fontFamily: "var(--font-geist-mono)",
-                    fontSize: 12,
-                    color: "var(--c-text-primary)",
-                  }}
-                >
-                  {b.v}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* barra + legenda */}
+        <StackedBar />
       </div>
     </div>
   );

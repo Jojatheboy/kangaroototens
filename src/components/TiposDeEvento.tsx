@@ -30,14 +30,6 @@ type Evento = {
 
 const eventos: Evento[] = [
   {
-    icon: HeartHandshake,
-    title: "Sociais",
-    subtitle: "Casamentos · Aniversários · Formaturas",
-    quote:
-      "Casamentos, aniversários, formaturas e aniversários de 15. Cada momento eternizado com a tecnologia e a operação da Kangaroo.",
-    image: "/images/eventos/sociais-1.jpg",
-  },
-  {
     icon: Briefcase,
     title: "Corporativos",
     subtitle: "Lançamentos · Ativações · Feiras",
@@ -69,6 +61,16 @@ const eventos: Evento[] = [
       "/images/eventos/personaliza-3.jpg",
       "/images/eventos/personaliza-4.jpg",
     ],
+  },
+  {
+    // por último de propósito: vídeo é mais pesado, melhora o carregamento
+    icon: HeartHandshake,
+    title: "Sociais",
+    subtitle: "Casamentos · Aniversários · Formaturas",
+    quote:
+      "Casamentos, aniversários, formaturas e aniversários de 15. Cada momento eternizado com a tecnologia e a operação da Kangaroo.",
+    video: "/videos/sociais.mp4",
+    poster: "/videos/sociais-poster.webp",
   },
 ];
 
