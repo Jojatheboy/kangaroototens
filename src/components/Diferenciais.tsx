@@ -293,15 +293,15 @@ function RightPanel({
   }, [index, register, onActive]);
 
   return (
-    <div ref={ref} className="min-h-screen flex items-start pt-[9vh] pb-[4vh]">
+    <div ref={ref} className="min-h-[82vh] flex items-center">
       <motion.div
         initial={{ opacity: 0.18, x: "14%", scale: 0.93 }}
         whileInView={{ opacity: 1, x: "0%", scale: 1 }}
         viewport={{ once: false, amount: 0.45 }}
         transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-        className="relative w-full rounded-l-[28px] overflow-hidden"
+        className="relative w-full rounded-[28px] overflow-hidden"
         style={{
-          height: "87vh",
+          height: "min(78vh, 600px)",
           background: "var(--c-surface)",
         }}
       >
@@ -348,16 +348,17 @@ export function Diferenciais() {
         </Reveal>
       </div>
 
-      {/* ——— DESKTOP: copy FIXA (esquerda) + imagens full-bleed (direita) ——— */}
-      <div className="hidden lg:flex items-start mt-6">
+      {/* ——— DESKTOP: copy FIXA (esquerda) + mídia contida e centralizada (direita) ——— */}
+      <div
+        className="hidden lg:flex items-start mt-6 mx-auto px-6"
+        style={{ maxWidth: 1220 }}
+      >
         {/* esquerda: fixa, alinhada ao container */}
         <div
-          className="sticky top-0 h-screen flex items-start shrink-0"
+          className="sticky top-0 h-screen flex items-center shrink-0"
           style={{
             width: "40%",
             minWidth: 420,
-            paddingTop: "9vh",
-            paddingLeft: "max(24px, calc((100vw - 1220px) / 2))",
             paddingRight: 48,
           }}
         >

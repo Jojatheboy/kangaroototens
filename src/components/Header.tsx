@@ -142,7 +142,7 @@ function renderMenuItem(item: MenuItem) {
       <NavigationMenuItem key={item.title}>
         <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
         <NavigationMenuContent>
-          <ul className="w-[760px] p-4 grid grid-cols-3 gap-2">
+          <ul className="w-[760px] p-5 grid grid-cols-3 gap-x-3 gap-y-5">
             {item.items.map((subItem) => (
               <li key={subItem.title}>
                 <NavigationMenuLink asChild>

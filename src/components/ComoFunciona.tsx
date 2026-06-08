@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Reveal } from "./Reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
@@ -26,6 +26,8 @@ import {
   Heart,
   PartyPopper,
   Building2,
+  Sparkles,
+  Share2,
 } from "lucide-react";
 
 /* ============ MINI MOCKUPS ============ */
@@ -54,10 +56,10 @@ function MockConversa() {
           <motion.div
             key={i}
             layout
-            initial={{ opacity: 0, y: 12, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 14, scale: 0.9, x: b.side === "user" ? 22 : -22 }}
+            animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+            transition={{ type: "spring", stiffness: 460, damping: 26, mass: 0.7 }}
             className={
               b.side === "user"
                 ? "self-end max-w-[78%] rounded-2xl rounded-tr-md px-4 py-2.5"
@@ -101,18 +103,20 @@ function MockConversa() {
             width: "fit-content",
           }}
         >
-          <span
-            className="block w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: "var(--c-orange)" }}
-          />
-          <span
-            className="block w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: "var(--c-orange)", animationDelay: "200ms" }}
-          />
-          <span
-            className="block w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: "var(--c-orange)", animationDelay: "400ms" }}
-          />
+          {[0, 1, 2].map((d) => (
+            <motion.span
+              key={d}
+              className="block w-1.5 h-1.5 rounded-full"
+              style={{ background: "var(--c-orange)" }}
+              animate={{ y: [0, -4, 0], opacity: [0.35, 1, 0.35] }}
+              transition={{
+                duration: 0.9,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: d * 0.15,
+              }}
+            />
+          ))}
         </motion.div>
       )}
     </div>
@@ -228,6 +232,16 @@ function MockPersonalizacao() {
     },
   ];
 
+  // Card extra (só desktop) — completa o leque sem estourar a altura do card
+  const extraEventos = [
+    {
+      icon: Building2,
+      title: "Confraternização TechCorp",
+      subtitle: "Fim de ano · 2025",
+      accent: "var(--c-blue)",
+    },
+  ];
+
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % eventos.length);
@@ -285,8 +299,8 @@ function MockPersonalizacao() {
         }}
       />
 
-      {/* Stack de cards */}
-      <div className="relative w-full" style={{ height: 120 }}>
+      {/* Stack de cards (rotativo) — só no mobile */}
+      <div className="relative w-full md:hidden" style={{ height: 120 }}>
         {eventos.map((ev, i) => {
           const offset = (i - activeIndex + eventos.length) % eventos.length;
           const Icon = ev.icon;
@@ -369,9 +383,101 @@ function MockPersonalizacao() {
           );
         })}
       </div>
+
+      {/* Desktop: leque completo abrindo em cascata (todos os eventos) */}
+      <div className="hidden md:flex flex-col w-full gap-2">
+        {[...eventos, ...extraEventos].map((ev, i) => {
+          const Icon = ev.icon;
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: -10, scale: 0.96 }}
+              whileInView={{
+                opacity: i === 0 ? 1 : Math.max(0.4, 0.84 - i * 0.12),
+                y: 0,
+                scale: 1,
+              }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.12 + i * 0.09, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl"
+              style={{
+                background: "var(--c-surface)",
+                border: "1px solid var(--c-line)",
+                boxShadow: i === 0 ? "0 8px 24px -10px rgba(0,0,0,0.5)" : "none",
+              }}
+            >
+              <div
+                className="inline-flex items-center justify-center rounded-lg shrink-0"
+                style={{
+                  width: 32,
+                  height: 32,
+                  background: "var(--c-surface-2)",
+                  border: `1px solid ${ev.accent}33`,
+                  color: ev.accent,
+                }}
+              >
+                <Icon size={16} strokeWidth={1.8} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className="truncate"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 600,
+                    fontSize: 13.5,
+                    color: "var(--c-text-primary)",
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {ev.title}
+                </p>
+                <p
+                  className="truncate"
+                  style={{
+                    fontFamily: "var(--font-geist)",
+                    fontSize: 11.5,
+                    color: "var(--c-text-mute)",
+                  }}
+                >
+                  {ev.subtitle}
+                </p>
+              </div>
+              <div
+                className="inline-flex items-center gap-1 shrink-0"
+                style={{
+                  fontFamily: "var(--font-geist-mono)",
+                  fontSize: 11,
+                  color: "var(--c-text-mute)",
+                }}
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--c-orange)">
+                  <path d="M13 2L4 14h7v8l9-12h-7z" />
+                </svg>
+                {i + 1}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }
+
+const EVT_FLOATERS: {
+  Icon: typeof Camera;
+  pos: CSSProperties;
+  sx: string;
+  sy: string;
+  tint: string;
+  size: number;
+  dur: string;
+  d: string;
+}[] = [
+  { Icon: Camera, pos: { left: "8%", top: "44%" }, sx: "-28px", sy: "-6px", tint: "#FF5A2A", size: 44, dur: "4.2s", d: "0s" },
+  { Icon: Share2, pos: { right: "8%", top: "44%" }, sx: "28px", sy: "-6px", tint: "#4FB4F5", size: 42, dur: "4.4s", d: "0.5s" },
+  { Icon: Sparkles, pos: { left: "13%", top: "77%" }, sx: "-30px", sy: "18px", tint: "#F5A623", size: 42, dur: "5s", d: "0.3s" },
+  { Icon: Heart, pos: { right: "13%", top: "77%" }, sx: "30px", sy: "18px", tint: "#9A6BE0", size: 40, dur: "4.6s", d: "0.7s" },
+];
 
 function MockEvento() {
   /* 3 papéis: fotos, relatório, hashtag */
@@ -487,11 +593,46 @@ function MockEvento() {
             "radial-gradient(circle at 50% 45%, rgba(255,90,42,0.18), transparent 60%)",
         }}
       />
-      {/* Folder por cima */}
-      <div className="relative z-10 flex items-end justify-center w-full h-full pb-2 pt-24">
+      {/* Ícones flutuando ao redor — se espalham (saem) no hover do card */}
+      <div className="absolute inset-0 z-20 pointer-events-none" aria-hidden="true">
+        {EVT_FLOATERS.map((f, i) => {
+          const Icon = f.Icon;
+          return (
+            <div
+              key={i}
+              className="evt-folder-floater absolute"
+              style={{ ...f.pos, "--sx": f.sx, "--sy": f.sy } as CSSProperties}
+            >
+              <div
+                className="evt-folder-floater__inner"
+                style={{ "--dur": f.dur, "--d": f.d } as CSSProperties}
+              >
+                <div
+                  className="flex items-center justify-center"
+                  style={{
+                    width: f.size,
+                    height: f.size,
+                    borderRadius: f.size * 0.28,
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    backdropFilter: "blur(4px)",
+                    WebkitBackdropFilter: "blur(4px)",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.28)",
+                  }}
+                >
+                  <Icon size={f.size * 0.42} strokeWidth={1.7} style={{ color: f.tint }} />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Folder por cima — elevada do fundo, papéis abrem pra cima sem cortar */}
+      <div className="relative z-10 flex items-end justify-center w-full h-full pb-10">
         <Folder
           color="#FF5A2A"
-          size={2.2}
+          size={2}
           items={[paperFotos, paperRelatorio, paperHashtag]}
         />
       </div>

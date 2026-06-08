@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import {
   Camera,
   Heart,
@@ -42,8 +43,13 @@ const STROKE = 9;
 function Rings() {
   const top = SEGMENTS.slice(0, 3);
   const MAX = Math.max(...top.map((t) => t.v));
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
   return (
-    <div className="relative w-full mx-auto max-w-[250px] lg:max-w-[470px]">
+    <div
+      ref={ref}
+      className="relative w-full mx-auto max-w-[240px] lg:max-w-[340px]"
+    >
       <svg viewBox="0 0 240 240" width="100%" className="block">
 
         {top.map((s, i) => {
@@ -72,8 +78,7 @@ function Rings() {
                 strokeDasharray={circ}
                 transform={`rotate(-90 ${C} ${C})`}
                 initial={{ strokeDashoffset: circ }}
-                whileInView={{ strokeDashoffset: circ * (1 - pct) }}
-                viewport={{ once: true }}
+                animate={{ strokeDashoffset: inView ? circ * (1 - pct) : circ }}
                 transition={{
                   duration: 1.1,
                   delay: 0.15 + i * 0.12,
@@ -119,8 +124,10 @@ function Rings() {
 /* --------------------------------------------------------------- barra */
 
 function StackedBar() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
   return (
-    <div>
+    <div ref={ref}>
       <div className="flex items-baseline justify-between" style={{ marginBottom: 11 }}>
         <span
           style={{
@@ -158,8 +165,11 @@ function StackedBar() {
               height: "100%",
             }}
             initial={{ width: 0, opacity: 0 }}
-            whileInView={{ width: `${(s.v / TOTAL) * 100}%`, opacity: 1 }}
-            viewport={{ once: true }}
+            animate={
+              inView
+                ? { width: `${(s.v / TOTAL) * 100}%`, opacity: 1 }
+                : { width: 0, opacity: 0 }
+            }
             transition={{ duration: 0.8, delay: 0.2 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
           />
         ))}
@@ -223,7 +233,7 @@ const FLOATERS = [
 function FloatingIcons() {
   return (
     <div
-      className="hidden lg:block absolute inset-0 pointer-events-none"
+      className="absolute inset-0 pointer-events-none [--fscale:0.6] lg:[--fscale:1]"
       aria-hidden="true"
     >
       {FLOATERS.map((f, i) => {
@@ -241,9 +251,9 @@ function FloatingIcons() {
             <motion.div
               className="flex items-center justify-center"
               style={{
-                width: f.size,
-                height: f.size,
-                borderRadius: f.size * 0.28,
+                width: `calc(${f.size}px * var(--fscale))`,
+                height: `calc(${f.size}px * var(--fscale))`,
+                borderRadius: `calc(${f.size * 0.28}px * var(--fscale))`,
                 background: "rgba(255,255,255,0.04)",
                 border: "1px solid rgba(255,255,255,0.09)",
                 backdropFilter: "blur(4px)",
@@ -258,7 +268,14 @@ function FloatingIcons() {
                 delay: f.d,
               }}
             >
-              <Icon size={f.size * 0.42} strokeWidth={1.7} style={{ color: f.tint }} />
+              <Icon
+                strokeWidth={1.7}
+                style={{
+                  width: `calc(${f.size * 0.42}px * var(--fscale))`,
+                  height: `calc(${f.size * 0.42}px * var(--fscale))`,
+                  color: f.tint,
+                }}
+              />
             </motion.div>
           </motion.div>
         );

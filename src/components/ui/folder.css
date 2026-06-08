@@ -3,6 +3,38 @@
   cursor: pointer;
 }
 
+/* ---- ícones flutuantes ao redor da pasta ---- */
+@keyframes evtFolderFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+.evt-folder-floater {
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* no hover do card (.group), os ícones se espalham pra fora */
+.group:hover .evt-folder-floater {
+  transform: translate(var(--sx, 0), var(--sy, 0));
+}
+
+.evt-folder-floater__inner {
+  animation: evtFolderFloat var(--dur, 4s) ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .evt-folder-floater__inner {
+    animation: none;
+  }
+}
+
 .folder:not(.folder--click):hover {
   transform: translateY(-8px);
 }

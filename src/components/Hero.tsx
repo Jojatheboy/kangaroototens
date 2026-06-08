@@ -34,7 +34,7 @@ export function Hero() {
         }}
       />
 
-      <div className="flex flex-col justify-center items-center w-[92vw] sm:w-[440px] md:w-[640px] lg:w-[820px] max-w-[92vw] z-30 pointer-events-auto">
+      <div className="flex flex-col justify-center items-center w-[92vw] sm:w-[440px] md:w-[640px] lg:w-[900px] xl:w-[1020px] max-w-[92vw] z-30 pointer-events-auto">
         {/* Announcement pill */}
         <motion.a
           href="#equipamentos"
@@ -78,7 +78,7 @@ export function Hero() {
         </motion.a>
 
         <motion.h1
-          className="text-[36px] sm:text-[44px] md:text-6xl lg:text-7xl text-center w-full justify-center items-center flex-col flex leading-[0.95]"
+          className="text-[36px] sm:text-[44px] md:text-6xl lg:text-[80px] xl:text-[92px] text-center w-full justify-center items-center flex-col flex leading-[0.95]"
           style={{
             fontFamily: "var(--font-display)",
             fontWeight: 700,
@@ -115,7 +115,7 @@ export function Hero() {
         </motion.h1>
 
         <motion.p
-          className="text-[13.5px] sm:text-base md:text-lg text-center mt-4 sm:mt-6 md:mt-7 max-w-[44ch] sm:max-w-[52ch] px-4 sm:px-0"
+          className="text-[13.5px] sm:text-base md:text-lg lg:text-xl text-center mt-4 sm:mt-6 md:mt-7 lg:mt-8 max-w-[44ch] sm:max-w-[52ch] px-4 sm:px-0"
           style={{ color: "var(--c-text-secondary)", lineHeight: 1.5, textWrap: "balance" }}
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
