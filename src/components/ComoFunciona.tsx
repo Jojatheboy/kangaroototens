@@ -473,13 +473,24 @@ const EVT_FLOATERS: {
   dur: string;
   d: string;
 }[] = [
-  { Icon: Camera, pos: { left: "8%", top: "44%" }, sx: "-28px", sy: "-6px", tint: "#FF5A2A", size: 44, dur: "4.2s", d: "0s" },
-  { Icon: Share2, pos: { right: "8%", top: "44%" }, sx: "28px", sy: "-6px", tint: "#4FB4F5", size: 42, dur: "4.4s", d: "0.5s" },
-  { Icon: Sparkles, pos: { left: "13%", top: "77%" }, sx: "-30px", sy: "18px", tint: "#F5A623", size: 42, dur: "5s", d: "0.3s" },
-  { Icon: Heart, pos: { right: "13%", top: "77%" }, sx: "30px", sy: "18px", tint: "#9A6BE0", size: 40, dur: "4.6s", d: "0.7s" },
+  { Icon: Camera, pos: { left: "3%", top: "34%" }, sx: "-30px", sy: "-8px", tint: "#FF5A2A", size: 46, dur: "4.2s", d: "0s" },
+  { Icon: Share2, pos: { right: "3%", top: "34%" }, sx: "30px", sy: "-8px", tint: "#4FB4F5", size: 44, dur: "4.4s", d: "0.5s" },
+  { Icon: Sparkles, pos: { left: "6%", top: "84%" }, sx: "-32px", sy: "20px", tint: "#F5A623", size: 44, dur: "5s", d: "0.3s" },
+  { Icon: Heart, pos: { right: "6%", top: "84%" }, sx: "32px", sy: "20px", tint: "#9A6BE0", size: 42, dur: "4.6s", d: "0.7s" },
 ];
 
 function MockEvento() {
+  const [hovered, setHovered] = useState(false);
+
+  // ao rolar a página o mouseleave não dispara (mouse parado), então o hover
+  // ficava grudado e os ícones não voltavam. Reseta no scroll.
+  useEffect(() => {
+    if (!hovered) return;
+    const reset = () => setHovered(false);
+    window.addEventListener("scroll", reset, { passive: true });
+    return () => window.removeEventListener("scroll", reset);
+  }, [hovered]);
+
   /* 3 papéis: fotos, relatório, hashtag */
   const paperFotos = (
     <div className="w-full h-full flex flex-col p-2 gap-1.5">
@@ -584,7 +595,11 @@ function MockEvento() {
   );
 
   return (
-    <>
+    <div
+      className="absolute inset-0"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       {/* MagicRings (WebGL/THREE.js) removido — causava travamento */}
       <div
         className="absolute inset-0 pointer-events-none opacity-60"
@@ -594,14 +609,20 @@ function MockEvento() {
         }}
       />
       {/* Ícones flutuando ao redor — se espalham (saem) no hover do card */}
-      <div className="absolute inset-0 z-20 pointer-events-none" aria-hidden="true">
+      <div
+        className="absolute inset-0 z-20 pointer-events-none [--fscale:0.85] md:[--fscale:1]"
+        aria-hidden="true"
+      >
         {EVT_FLOATERS.map((f, i) => {
           const Icon = f.Icon;
           return (
             <div
               key={i}
               className="evt-folder-floater absolute"
-              style={{ ...f.pos, "--sx": f.sx, "--sy": f.sy } as CSSProperties}
+              style={{
+                ...f.pos,
+                transform: hovered ? `translate(${f.sx}, ${f.sy})` : "none",
+              } as CSSProperties}
             >
               <div
                 className="evt-folder-floater__inner"
@@ -610,9 +631,9 @@ function MockEvento() {
                 <div
                   className="flex items-center justify-center"
                   style={{
-                    width: f.size,
-                    height: f.size,
-                    borderRadius: f.size * 0.28,
+                    width: `calc(${f.size}px * var(--fscale))`,
+                    height: `calc(${f.size}px * var(--fscale))`,
+                    borderRadius: `calc(${f.size * 0.28}px * var(--fscale))`,
                     background: "rgba(255,255,255,0.05)",
                     border: "1px solid rgba(255,255,255,0.10)",
                     backdropFilter: "blur(4px)",
@@ -620,7 +641,14 @@ function MockEvento() {
                     boxShadow: "0 8px 24px rgba(0,0,0,0.28)",
                   }}
                 >
-                  <Icon size={f.size * 0.42} strokeWidth={1.7} style={{ color: f.tint }} />
+                  <Icon
+                    strokeWidth={1.7}
+                    style={{
+                      width: `calc(${f.size * 0.42}px * var(--fscale))`,
+                      height: `calc(${f.size * 0.42}px * var(--fscale))`,
+                      color: f.tint,
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -629,14 +657,16 @@ function MockEvento() {
       </div>
 
       {/* Folder por cima — elevada do fundo, papéis abrem pra cima sem cortar */}
-      <div className="relative z-10 flex items-end justify-center w-full h-full pb-10">
-        <Folder
-          color="#FF5A2A"
-          size={2}
-          items={[paperFotos, paperRelatorio, paperHashtag]}
-        />
+      <div className="relative z-10 flex items-end justify-center w-full h-full pb-6 md:pb-10">
+        <div className="origin-bottom scale-[0.68] md:scale-100">
+          <Folder
+            color="#FF5A2A"
+            size={2}
+            items={[paperFotos, paperRelatorio, paperHashtag]}
+          />
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 

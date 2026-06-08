@@ -41,7 +41,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
-          className="inline-flex items-center gap-2 sm:gap-2.5 rounded-full no-underline mb-6 sm:mb-9 transition-colors max-w-[88vw]"
+          className="inline-flex items-center gap-2 sm:gap-2.5 rounded-full no-underline mb-3 sm:mb-4 transition-colors max-w-[88vw]"
           style={{
             background: "rgba(var(--c-ink-rgb), 0.55)",
             backdropFilter: "blur(10px)",
@@ -78,7 +78,7 @@ export function Hero() {
         </motion.a>
 
         <motion.h1
-          className="text-[36px] sm:text-[44px] md:text-6xl lg:text-[80px] xl:text-[92px] text-center w-full justify-center items-center flex-col flex leading-[0.95]"
+          className="text-[36px] sm:text-[44px] md:text-6xl lg:text-[76px] xl:text-[88px] text-center w-full justify-center items-center flex-col flex leading-[0.95]"
           style={{
             fontFamily: "var(--font-display)",
             fontWeight: 700,
@@ -115,7 +115,7 @@ export function Hero() {
         </motion.h1>
 
         <motion.p
-          className="text-[13.5px] sm:text-base md:text-lg lg:text-xl text-center mt-4 sm:mt-6 md:mt-7 lg:mt-8 max-w-[44ch] sm:max-w-[52ch] px-4 sm:px-0"
+          className="text-[13.5px] sm:text-base md:text-lg lg:text-xl text-center mt-4 sm:mt-6 md:mt-7 max-w-[44ch] sm:max-w-[52ch] px-4 sm:px-0"
           style={{ color: "var(--c-text-secondary)", lineHeight: 1.5, textWrap: "balance" }}
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
@@ -126,7 +126,7 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          className="flex flex-row flex-wrap justify-center items-center gap-2.5 sm:gap-3 mt-7 sm:mt-10 md:mt-12 z-20"
+          className="flex flex-row flex-wrap justify-center items-center gap-2.5 sm:gap-3 mt-7 sm:mt-9 md:mt-10 z-20"
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.4, ease: "easeOut", delay: 0.7 }}

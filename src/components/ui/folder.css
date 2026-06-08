@@ -19,11 +19,6 @@
   will-change: transform;
 }
 
-/* no hover do card (.group), os ícones se espalham pra fora */
-.group:hover .evt-folder-floater {
-  transform: translate(var(--sx, 0), var(--sy, 0));
-}
-
 .evt-folder-floater__inner {
   animation: evtFolderFloat var(--dur, 4s) ease-in-out infinite;
   animation-delay: var(--d, 0s);
